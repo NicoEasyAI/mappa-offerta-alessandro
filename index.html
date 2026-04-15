@@ -3,1679 +3,2402 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mappa Mentale — Offerta Alessandro De Martino</title>
+<title>Mappa Strategica — Alessandro De Martino</title>
 <style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body {
-    background: #0f0f13;
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    color: #e8e8e8;
-    min-height: 100vh;
-    overflow-x: hidden;
-  }
+body {
+  background: #0a0a0f;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  color: #e8e8e8;
+  min-height: 100vh;
+  display: flex;
+}
 
-  h1.page-title {
-    text-align: center;
-    padding: 28px 20px 8px;
-    font-size: 1.1rem;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    color: #888;
-    font-weight: 400;
-  }
+/* ══════════════════════════════════════════════════════
+   SIDEBAR
+   ══════════════════════════════════════════════════════ */
+.sidebar {
+  width: 260px;
+  min-height: 100vh;
+  background: #0f0f15;
+  border-right: 1px solid #1a1a25;
+  position: fixed;
+  top: 0; left: 0;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+.sidebar-header {
+  padding: 24px 20px 18px;
+  border-bottom: 1px solid #1a1a25;
+}
+.sidebar-brand {
+  font-size: .6rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: #f0c040;
+  margin-bottom: 4px;
+}
+.sidebar-title {
+  font-size: .95rem;
+  font-weight: 700;
+  color: #fff;
+  line-height: 1.3;
+}
+.sidebar-sub {
+  font-size: .68rem;
+  color: #555;
+  margin-top: 4px;
+}
 
-  /* ── LAYOUT ─────────────────────────────────────── */
-  .map {
-    display: grid;
-    grid-template-columns: 1fr 320px 1fr;
-    grid-template-rows: auto auto auto;
-    gap: 18px;
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 20px 24px 48px;
-    align-items: start;
-  }
+.sidebar-nav {
+  flex: 1;
+  padding: 12px 0;
+}
+.nav-section {
+  padding: 0 12px;
+  margin-bottom: 4px;
+}
+.nav-section-label {
+  font-size: .55rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: #444;
+  padding: 10px 10px 6px;
+  font-weight: 700;
+}
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: .78rem;
+  color: #888;
+  transition: all .15s;
+  border: 1px solid transparent;
+  text-decoration: none;
+}
+.nav-item:hover {
+  background: rgba(255,255,255,.04);
+  color: #ccc;
+}
+.nav-item.active {
+  background: rgba(240,192,64,.08);
+  color: #f0c040;
+  border-color: rgba(240,192,64,.2);
+  font-weight: 600;
+}
+.nav-item .nav-icon {
+  font-size: .9rem;
+  width: 20px;
+  text-align: center;
+  flex-shrink: 0;
+}
+.nav-item .nav-badge {
+  margin-left: auto;
+  font-size: .6rem;
+  padding: 1px 6px;
+  border-radius: 10px;
+  background: rgba(240,192,64,.15);
+  color: #f0c040;
+  font-weight: 700;
+}
+.nav-item .nav-badge.badge-red {
+  background: rgba(224,80,80,.15);
+  color: #e05050;
+}
+.nav-item .nav-badge.badge-green {
+  background: rgba(64,192,112,.15);
+  color: #40c070;
+}
 
-  /* CENTER */
-  .center {
-    grid-column: 2;
-    grid-row: 1 / 4;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    padding-top: 40px;
-    gap: 0;
-  }
+/* ══════════════════════════════════════════════════════
+   MAIN CONTENT
+   ══════════════════════════════════════════════════════ */
+.main {
+  margin-left: 260px;
+  flex: 1;
+  min-height: 100vh;
+  padding: 0;
+}
 
-  .center-node {
-    background: linear-gradient(145deg, #1a1a2e, #16213e);
-    border: 2px solid #f0c040;
-    border-radius: 50%;
-    width: 220px;
-    height: 220px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding: 20px;
-    box-shadow: 0 0 40px rgba(240,192,64,.25), 0 0 80px rgba(240,192,64,.08);
-  }
+.page {
+  display: none;
+  padding: 32px 40px 80px;
+  max-width: 1200px;
+  animation: fadeIn .2s ease;
+}
+.page.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
 
-  .center-node .brand {
-    font-size: .65rem;
-    letter-spacing: .2em;
-    text-transform: uppercase;
-    color: #f0c040;
-    margin-bottom: 6px;
-  }
-  .center-node .name {
-    font-size: 1rem;
-    font-weight: 700;
-    line-height: 1.3;
-    color: #fff;
-  }
-  .center-node .tag {
-    font-size: .7rem;
-    color: #aaa;
-    margin-top: 6px;
-    line-height: 1.4;
-  }
+.page-header {
+  margin-bottom: 32px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #1a1a25;
+}
+.page-header h1 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 6px;
+}
+.page-header p {
+  font-size: .85rem;
+  color: #666;
+  line-height: 1.5;
+}
 
-  /* COLUMN LEFT */
-  .col-left  { grid-column: 1; display: flex; flex-direction: column; gap: 18px; }
-  .col-right { grid-column: 3; display: flex; flex-direction: column; gap: 18px; }
-  .col-bottom { grid-column: 1 / 4; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 18px; }
+/* ══════════════════════════════════════════════════════
+   DASHBOARD CARDS
+   ══════════════════════════════════════════════════════ */
+.dash-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+.dash-card {
+  background: linear-gradient(135deg, #111118, #0d0d14);
+  border: 1px solid #1a1a28;
+  border-radius: 14px;
+  padding: 20px;
+  cursor: pointer;
+  transition: all .2s;
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+.dash-card:hover {
+  border-color: rgba(240,192,64,.3);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0,0,0,.3);
+}
+.dash-card-icon {
+  font-size: 1.6rem;
+  margin-bottom: 12px;
+}
+.dash-card-title {
+  font-size: .9rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 6px;
+}
+.dash-card-desc {
+  font-size: .75rem;
+  color: #666;
+  line-height: 1.5;
+}
+.dash-card-status {
+  margin-top: 12px;
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+.status-ok { color: #40c070; }
+.status-wip { color: #f0c040; }
+.status-todo { color: #e05050; }
 
-  /* ── CARD ─────────────────────────────────────── */
-  .card {
-    border-radius: 14px;
-    padding: 18px 20px;
-    position: relative;
-    border: 1px solid transparent;
-  }
+/* ══════════════════════════════════════════════════════
+   SECTION CARDS (generic inner cards)
+   ══════════════════════════════════════════════════════ */
+.s-card {
+  background: linear-gradient(135deg, #111118, #0d0d14);
+  border: 1px solid #1a1a28;
+  border-radius: 14px;
+  padding: 22px 24px;
+  margin-bottom: 20px;
+}
+.s-card h3 {
+  font-size: .75rem;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.s-card h3 .dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.s-card p, .s-card li {
+  font-size: .84rem;
+  line-height: 1.6;
+  color: #ccc;
+}
+.s-card ul { list-style: none; }
+.s-card ul li {
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.s-card ul li:last-child { border-bottom: none; }
+.s-card ul li .icon { flex-shrink: 0; font-size: .9rem; }
+.s-card strong { color: #fff; font-weight: 600; }
 
-  .card-title {
-    font-size: .65rem;
-    letter-spacing: .18em;
-    text-transform: uppercase;
-    font-weight: 700;
-    margin-bottom: 14px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .card-title .dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
+/* Color variants */
+.s-gold { border-color: rgba(240,192,64,.3); }
+.s-gold h3 { color: #f0c040; }
+.s-gold h3 .dot { background: #f0c040; }
 
-  .item {
-    font-size: .82rem;
-    line-height: 1.5;
-    padding: 7px 0;
-    border-bottom: 1px solid rgba(255,255,255,.05);
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-  }
-  .item:last-child { border-bottom: none; }
-  .item .icon { flex-shrink: 0; font-size: .9rem; line-height: 1.5; }
-  .item strong { color: #fff; font-weight: 600; }
-  .item .sub {
-    font-size: .73rem;
-    color: #999;
-    display: block;
-    margin-top: 2px;
-  }
+.s-blue { border-color: rgba(74,144,217,.3); }
+.s-blue h3 { color: #4a90d9; }
+.s-blue h3 .dot { background: #4a90d9; }
 
-  /* BADGE */
-  .badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 20px;
-    font-size: .65rem;
-    font-weight: 700;
-    letter-spacing: .06em;
-  }
+.s-green { border-color: rgba(64,192,112,.3); }
+.s-green h3 { color: #40c070; }
+.s-green h3 .dot { background: #40c070; }
 
-  /* PHASE ROWS */
-  .phase {
-    display: grid;
-    grid-template-columns: 28px 1fr;
-    gap: 10px;
-    padding: 10px 0;
-    border-bottom: 1px solid rgba(255,255,255,.05);
-    align-items: start;
-  }
-  .phase:last-child { border-bottom: none; }
-  .phase-num {
-    width: 28px; height: 28px;
-    border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: .75rem; font-weight: 800;
-    flex-shrink: 0;
-  }
-  .phase-body .phase-name { font-weight: 700; font-size: .85rem; color: #fff; }
-  .phase-body .phase-desc { font-size: .73rem; color: #aaa; margin-top: 3px; line-height: 1.4; }
-  .phase-body .phase-result {
-    font-size: .72rem;
-    font-weight: 700;
-    margin-top: 5px;
-    padding: 2px 8px;
-    border-radius: 4px;
-    display: inline-block;
-  }
+.s-purple { border-color: rgba(155,89,182,.3); }
+.s-purple h3 { color: #9b59b6; }
+.s-purple h3 .dot { background: #9b59b6; }
 
-  /* RESULT GRID */
-  .result-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    margin-top: 4px;
-  }
-  .result-item {
-    background: rgba(255,255,255,.04);
-    border-radius: 8px;
-    padding: 8px 10px;
-    font-size: .72rem;
-  }
-  .result-item .who { color: #bbb; }
-  .result-item .amt { font-size: .95rem; font-weight: 800; margin-top: 2px; }
-  .result-item .detail { font-size: .65rem; color: #777; margin-top: 1px; }
+.s-red { border-color: rgba(224,80,80,.3); }
+.s-red h3 { color: #e05050; }
+.s-red h3 .dot { background: #e05050; }
 
-  /* COLOR THEMES */
-  .theme-gold   { background: linear-gradient(135deg,#1c1a0e,#1a1800); border-color: #f0c040; }
-  .theme-gold   .card-title { color: #f0c040; }
-  .theme-gold   .dot { background: #f0c040; }
+.s-cyan { border-color: rgba(32,192,192,.3); }
+.s-cyan h3 { color: #20c0c0; }
+.s-cyan h3 .dot { background: #20c0c0; }
 
-  .theme-blue   { background: linear-gradient(135deg,#0d1b2a,#091523); border-color: #4a90d9; }
-  .theme-blue   .card-title { color: #4a90d9; }
-  .theme-blue   .dot { background: #4a90d9; }
+.s-orange { border-color: rgba(224,128,32,.3); }
+.s-orange h3 { color: #e08020; }
+.s-orange h3 .dot { background: #e08020; }
 
-  .theme-green  { background: linear-gradient(135deg,#0b1e14,#08180f); border-color: #40c070; }
-  .theme-green  .card-title { color: #40c070; }
-  .theme-green  .dot { background: #40c070; }
+/* Grid layouts */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
 
-  .theme-purple { background: linear-gradient(135deg,#1a0d2a,#150920); border-color: #9b59b6; }
-  .theme-purple .card-title { color: #9b59b6; }
-  .theme-purple .dot { background: #9b59b6; }
+/* Info box */
+.info-box {
+  background: rgba(74,144,217,.06);
+  border: 1px solid rgba(74,144,217,.2);
+  border-left: 3px solid #4a90d9;
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  font-size: .84rem;
+  color: #bbb;
+  line-height: 1.6;
+}
+.info-box strong { color: #4a90d9; }
+.info-box.info-gold {
+  background: rgba(240,192,64,.06);
+  border-color: rgba(240,192,64,.2);
+  border-left-color: #f0c040;
+}
+.info-box.info-gold strong { color: #f0c040; }
+.info-box.info-red {
+  background: rgba(224,80,80,.06);
+  border-color: rgba(224,80,80,.2);
+  border-left-color: #e05050;
+}
+.info-box.info-red strong { color: #e05050; }
+.info-box.info-green {
+  background: rgba(64,192,112,.06);
+  border-color: rgba(64,192,112,.2);
+  border-left-color: #40c070;
+}
+.info-box.info-green strong { color: #40c070; }
 
-  .theme-red    { background: linear-gradient(135deg,#1e0d0d,#180909); border-color: #e05050; }
-  .theme-red    .card-title { color: #e05050; }
-  .theme-red    .dot { background: #e05050; }
+/* Placeholder box for empty sections */
+.placeholder {
+  background: rgba(255,255,255,.02);
+  border: 1px dashed #2a2a35;
+  border-radius: 14px;
+  padding: 40px 30px;
+  text-align: center;
+  color: #444;
+  font-size: .85rem;
+}
+.placeholder .ph-icon { font-size: 2rem; margin-bottom: 12px; }
+.placeholder .ph-title { color: #666; font-weight: 700; margin-bottom: 6px; }
+.placeholder .ph-desc { font-size: .78rem; line-height: 1.5; }
 
-  .theme-cyan   { background: linear-gradient(135deg,#0a1e20,#07181a); border-color: #20c0c0; }
-  .theme-cyan   .card-title { color: #20c0c0; }
-  .theme-cyan   .dot { background: #20c0c0; }
+/* Tags */
+.tag-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.tag {
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: .65rem;
+  font-weight: 700;
+  letter-spacing: .05em;
+}
+.tag-gold { background: rgba(240,192,64,.15); color: #f0c040; }
+.tag-green { background: rgba(64,192,112,.15); color: #40c070; }
+.tag-blue { background: rgba(74,144,217,.15); color: #4a90d9; }
+.tag-red { background: rgba(224,80,80,.15); color: #e05050; }
+.tag-purple { background: rgba(155,89,182,.15); color: #9b59b6; }
+.tag-orange { background: rgba(224,128,32,.15); color: #e08020; }
+.tag-cyan { background: rgba(32,192,192,.15); color: #20c0c0; }
 
-  .theme-orange { background: linear-gradient(135deg,#1e1208,#180e05); border-color: #e08020; }
-  .theme-orange .card-title { color: #e08020; }
-  .theme-orange .dot { background: #e08020; }
+/* Testimonial card */
+.testi-card {
+  background: linear-gradient(135deg, #111118, #0d0d14);
+  border: 1px solid #1a1a28;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 14px;
+}
+.testi-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.testi-avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  background: rgba(64,192,112,.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+.testi-name { font-weight: 700; color: #fff; font-size: .9rem; }
+.testi-detail { font-size: .72rem; color: #666; }
+.testi-result {
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin: 8px 0;
+}
+.testi-quote {
+  font-size: .8rem;
+  color: #999;
+  font-style: italic;
+  line-height: 1.5;
+  padding-left: 14px;
+  border-left: 2px solid #2a2a35;
+}
+.testi-links {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+.testi-link {
+  font-size: .68rem;
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: rgba(74,144,217,.1);
+  color: #4a90d9;
+  text-decoration: none;
+  font-weight: 600;
+}
 
-  /* Phase num colors */
-  .ph1 { background: #f0c040; color: #000; }
-  .ph2 { background: #4a90d9; color: #fff; }
-  .ph3 { background: #40c070; color: #000; }
+/* Product card */
+.prod-card {
+  background: linear-gradient(135deg, #111118, #0d0d14);
+  border: 1px solid #1a1a28;
+  border-radius: 16px;
+  padding: 24px;
+  position: relative;
+}
+.prod-type {
+  font-size: .6rem;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.prod-name {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.prod-price {
+  font-size: 1.8rem;
+  font-weight: 900;
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.prod-price sup { font-size: .9rem; font-weight: 600; vertical-align: super; }
+.prod-rate { font-size: .7rem; color: #666; margin-bottom: 16px; display: block; }
+.prod-features { list-style: none; }
+.prod-features li {
+  font-size: .8rem;
+  color: #ccc;
+  padding: 5px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  line-height: 1.4;
+}
+.prod-features li .fi { flex-shrink: 0; font-size: .85rem; }
 
-  .pr-base { background: rgba(74,144,217,.2); color: #4a90d9; }
-  .pr-vip  { background: rgba(240,192,64,.2); color: #f0c040; }
-  .pr-scale { background: rgba(64,192,112,.2); color: #40c070; }
+/* Funnel diagram */
+.funnel-step {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 0;
+  border-bottom: 1px solid rgba(255,255,255,.04);
+}
+.funnel-step:last-child { border-bottom: none; }
+.funnel-num {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .85rem;
+  font-weight: 800;
+  flex-shrink: 0;
+}
+.funnel-body { flex: 1; }
+.funnel-name { font-weight: 700; font-size: .9rem; color: #fff; margin-bottom: 3px; }
+.funnel-desc { font-size: .78rem; color: #888; line-height: 1.5; }
+.funnel-arrow {
+  color: #333;
+  font-size: 1.2rem;
+  text-align: center;
+  padding: 4px 0;
+}
 
-  .amt-green { color: #40c070; }
-  .amt-gold  { color: #f0c040; }
-  .amt-blue  { color: #4a90d9; }
+/* Competitor card */
+.comp-card {
+  background: linear-gradient(135deg, #111118, #0d0d14);
+  border: 1px solid #1a1a28;
+  border-radius: 14px;
+  padding: 22px;
+  margin-bottom: 16px;
+}
+.comp-header { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.comp-name { font-weight: 800; font-size: 1rem; color: #fff; }
+.comp-url { font-size: .7rem; color: #555; }
+.comp-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.comp-stat {
+  background: rgba(255,255,255,.03);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+.comp-stat-label { font-size: .65rem; color: #555; text-transform: uppercase; letter-spacing: .1em; font-weight: 700; margin-bottom: 4px; }
+.comp-stat-value { font-size: .9rem; font-weight: 700; color: #ddd; }
 
-  /* Connectors (visual hint) */
-  .center::after {
-    content: '';
-    display: none;
-  }
-
-  @media (max-width: 900px) {
-    .map { grid-template-columns: 1fr; }
-    .col-left, .col-right { grid-column: 1; }
-    .center { grid-column: 1; grid-row: auto; }
-    .col-bottom { grid-template-columns: 1fr; }
-  }
-
-  /* ── EDIT MODE ───────────────────────────────────── */
-  .toolbar {
-    position: fixed;
-    top: 16px;
-    right: 20px;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: #1a1a1a;
-    border: 1px solid #333;
-    border-radius: 12px;
-    padding: 8px 12px;
-    box-shadow: 0 4px 24px rgba(0,0,0,.5);
-  }
-  .toolbar-label {
-    font-size: .65rem;
-    letter-spacing: .1em;
-    text-transform: uppercase;
-    color: #555;
-    margin-right: 4px;
-  }
-  .btn {
-    padding: 6px 14px;
-    border-radius: 8px;
-    border: none;
-    font-size: .72rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all .15s;
-    letter-spacing: .04em;
-  }
-  .btn-edit {
-    background: #222;
-    color: #888;
-    border: 1px solid #333;
-  }
-  .btn-edit.active {
-    background: #f0c040;
-    color: #000;
-    border-color: #f0c040;
-  }
-  .btn-save {
-    background: #40c070;
-    color: #000;
-    display: none;
-  }
-  .btn-clear {
-    background: #333;
-    color: #888;
-    border: 1px solid #444;
-    font-size: .65rem;
-    padding: 6px 10px;
-    display: none;
-  }
-  .btn-pdf {
-    background: #222;
-    color: #666;
-    border: 1px solid #333;
-  }
-  .btn-add-item {
-    display: none;
-    background: rgba(64,192,112,.15);
-    color: #40c070;
-    border: 1px dashed #40c070;
-    font-size: .65rem;
-    padding: 4px 10px;
-    border-radius: 6px;
-    cursor: pointer;
-    margin-top: 6px;
+/* Mobile */
+@media (max-width: 900px) {
+  .sidebar {
     width: 100%;
-    text-align: center;
-  }
-  .save-indicator {
-    font-size: .62rem;
-    color: #40c070;
-    display: none;
-    animation: fadeout 2s forwards;
-  }
-  @keyframes fadeout { 0%{opacity:1} 70%{opacity:1} 100%{opacity:0} }
-
-  /* editable state */
-  body.edit-mode [contenteditable] {
-    outline: none;
-    border-radius: 4px;
-    transition: background .1s;
-    cursor: text;
-    min-width: 20px;
-    display: inline-block;
-  }
-  body.edit-mode [contenteditable]:hover {
-    background: rgba(240,192,64,.08);
-    box-shadow: 0 0 0 1px rgba(240,192,64,.25);
-  }
-  body.edit-mode [contenteditable]:focus {
-    background: rgba(240,192,64,.12);
-    box-shadow: 0 0 0 2px rgba(240,192,64,.4);
-  }
-  body.edit-mode .item,
-  body.edit-mode .pkg-features li,
-  body.edit-mode .phase {
+    min-height: auto;
     position: relative;
+    border-right: none;
+    border-bottom: 1px solid #1a1a25;
   }
-  body.edit-mode .del-btn {
-    display: inline-flex;
-  }
-  .del-btn {
-    display: none;
-    align-items: center;
-    justify-content: center;
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    background: rgba(224,80,80,.2);
-    color: #e05050;
-    font-size: .7rem;
-    cursor: pointer;
-    border: none;
-    flex-shrink: 0;
-    margin-left: auto;
-    line-height: 1;
-    transition: background .1s;
-  }
-  .del-btn:hover { background: rgba(224,80,80,.4); }
-  body.edit-mode .btn-add-item { display: block; }
-  body.edit-mode .btn-save { display: inline-block; }
-  body.edit-mode .btn-clear { display: inline-block; }
+  body { flex-direction: column; }
+  .main { margin-left: 0; }
+  .page { padding: 24px 16px 60px; }
+  .dash-grid, .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  .sidebar-nav { display: flex; overflow-x: auto; padding: 8px 12px; gap: 4px; }
+  .nav-section { display: contents; }
+  .nav-section-label { display: none; }
+  .nav-item { white-space: nowrap; padding: 8px 12px; font-size: .72rem; }
+}
 
-  /* ── USP BANNER ──────────────────────────────────── */
-  .usp-banner {
-    max-width: 1280px;
-    margin: 0 auto 30px;
-    padding: 18px 26px;
-    background: linear-gradient(135deg, #0f1d14, #0a1510);
-    border: 1px solid #40c070;
-    border-radius: 14px;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    box-shadow: 0 0 40px rgba(64,192,112,.1);
-  }
-  .usp-banner .usp-icon {
-    font-size: 1.8rem;
-    flex-shrink: 0;
-  }
-  .usp-banner .usp-text {
-    font-size: .95rem;
-    color: #ddd;
-    line-height: 1.5;
-  }
-  .usp-banner .usp-text strong {
-    color: #40c070;
-    font-weight: 800;
-  }
-  @media (max-width: 900px) {
-    .usp-banner {
-      margin: 0 20px 24px;
-      padding: 14px 18px;
-      gap: 12px;
-    }
-    .usp-banner .usp-text { font-size: .85rem; }
-  }
+/* Scrollbar */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #222; border-radius: 3px; }
 
-  /* ── PACCHETTI SECTION ───────────────────────────── */
-  .pacchetti-section {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 24px 60px;
-  }
-
-  .section-divider {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    margin-bottom: 32px;
-  }
-  .section-divider::before,
-  .section-divider::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: rgba(255,255,255,.1);
-  }
-  .section-divider span {
-    font-size: .65rem;
-    letter-spacing: .22em;
-    text-transform: uppercase;
-    color: #666;
-    white-space: nowrap;
-  }
-
-  .pkg-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1.4fr;
-    gap: 16px;
-    align-items: stretch;
-  }
-
-  .pkg-card {
-    border-radius: 16px;
-    padding: 22px 20px;
-    border: 1px solid;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
-
-  .pkg-label {
-    font-size: .6rem;
-    letter-spacing: .22em;
-    text-transform: uppercase;
-    font-weight: 700;
-    margin-bottom: 10px;
-  }
-  .pkg-name {
-    font-size: 1.1rem;
-    font-weight: 800;
-    color: #fff;
-    margin-bottom: 4px;
-  }
-  .pkg-price {
-    font-size: 2rem;
-    font-weight: 900;
-    line-height: 1;
-    margin-bottom: 18px;
-  }
-  .pkg-price sup {
-    font-size: 1rem;
-    font-weight: 600;
-    vertical-align: super;
-  }
-  .pkg-price .rate {
-    display: block;
-    font-size: .7rem;
-    font-weight: 400;
-    color: #aaa;
-    margin-top: 4px;
-  }
-
-  .pkg-features {
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    flex: 1;
-  }
-  .pkg-features li {
-    font-size: .78rem;
-    color: #ccc;
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    line-height: 1.4;
-  }
-  .pkg-features li .fi { flex-shrink: 0; font-size: .85rem; }
-  .pkg-features li.dim { color: #555; }
-  .pkg-features li.dim .fi { opacity: .3; }
-
-  .pkg-tag {
-    display: inline-block;
-    padding: 3px 10px;
-    border-radius: 20px;
-    font-size: .62rem;
-    font-weight: 700;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    margin-bottom: 14px;
-    width: fit-content;
-  }
-
-  /* DOWN-SELL */
-  .pkg-ds {
-    background: linear-gradient(135deg,#111,#0d0d0d);
-    border-color: #333;
-  }
-  .pkg-ds .pkg-label { color: #666; }
-  .pkg-ds .pkg-price { color: #888; }
-  .pkg-ds .pkg-tag { background: rgba(255,255,255,.06); color: #666; }
-
-  /* BASE */
-  .pkg-base {
-    background: linear-gradient(135deg,#0d1b2a,#091523);
-    border-color: #4a90d9;
-  }
-  .pkg-base .pkg-label { color: #4a90d9; }
-  .pkg-base .pkg-price { color: #4a90d9; }
-  .pkg-base .pkg-tag { background: rgba(74,144,217,.15); color: #4a90d9; }
-
-  /* STANDARD */
-  .pkg-std {
-    background: linear-gradient(135deg,#1c1a0e,#1a1800);
-    border-color: #f0c040;
-  }
-  .pkg-std .pkg-label { color: #f0c040; }
-  .pkg-std .pkg-price { color: #f0c040; }
-  .pkg-std .pkg-tag { background: rgba(240,192,64,.15); color: #f0c040; }
-
-  /* PREMIUM — HERO */
-  .pkg-premium {
-    background: linear-gradient(135deg,#0b1e14,#051208);
-    border-color: #40c070;
-    border-width: 2px;
-    box-shadow: 0 0 40px rgba(64,192,112,.15), 0 0 80px rgba(64,192,112,.05);
-  }
-  .pkg-premium .pkg-label { color: #40c070; }
-  .pkg-premium .pkg-price { color: #40c070; }
-  .pkg-premium .pkg-tag { background: rgba(64,192,112,.18); color: #40c070; }
-
-  .hero-badge {
-    position: absolute;
-    top: -12px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #40c070;
-    color: #000;
-    font-size: .6rem;
-    font-weight: 800;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    padding: 4px 14px;
-    border-radius: 20px;
-    white-space: nowrap;
-  }
-
-  .pkg-divider {
-    height: 1px;
-    background: rgba(255,255,255,.06);
-    margin: 16px 0;
-  }
-
-  .pkg-backend-note {
-    margin-top: 16px;
-    background: rgba(224,80,80,.08);
-    border: 1px solid rgba(224,80,80,.2);
-    border-radius: 10px;
-    padding: 12px 14px;
-    font-size: .73rem;
-    color: #aaa;
-    line-height: 1.5;
-  }
-  .pkg-backend-note strong { color: #e05050; }
-
-  .pkg-contract {
-    margin-top: 10px;
-    background: rgba(240,192,64,.06);
-    border: 1px solid rgba(240,192,64,.15);
-    border-radius: 8px;
-    padding: 8px 12px;
-    font-size: .7rem;
-    color: #aaa;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .pkg-guarantee {
-    margin-top: 14px;
-    background: rgba(155,89,182,.1);
-    border: 1px solid rgba(155,89,182,.3);
-    border-radius: 10px;
-    padding: 10px 13px;
-    font-size: .73rem;
-    color: #c89ee0;
-    display: flex;
-    align-items: flex-start;
-    gap: 8px;
-    line-height: 1.4;
-  }
-  .pkg-guarantee .g-icon { font-size: 1rem; flex-shrink: 0; margin-top: 1px; }
-  .pkg-guarantee strong { color: #d4aaee; }
-
-  .pkg-timeline {
-    margin-top: 14px;
-    background: rgba(255,255,255,.03);
-    border: 1px solid rgba(255,255,255,.08);
-    border-radius: 10px;
-    padding: 12px 13px;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .pkg-timeline .tl-title {
-    font-size: .6rem;
-    letter-spacing: .15em;
-    text-transform: uppercase;
-    color: #555;
-    font-weight: 700;
-    margin-bottom: 2px;
-  }
-  .pkg-timeline .tl-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-    font-size: .75rem;
-    line-height: 1.4;
-    color: #bbb;
-  }
-  .pkg-timeline .tl-dot {
-    width: 7px; height: 7px;
-    border-radius: 50%;
-    background: #40c070;
-    flex-shrink: 0;
-    margin-top: 5px;
-  }
-  .pkg-timeline .tl-row strong { color: #40c070; font-weight: 700; }
-  .pkg-timeline .tl-row span { color: #666; font-size: .7rem; display: block; }
-
-  /* ── PKG SECTION TITLES & TIER BOX ──────────────── */
-  .pkg-section-title {
-    font-size: .62rem;
-    letter-spacing: .18em;
-    text-transform: uppercase;
-    color: #888;
-    font-weight: 700;
-    margin-top: 14px;
-    margin-bottom: 8px;
-    padding-bottom: 4px;
-    border-bottom: 1px solid rgba(255,255,255,.06);
-  }
-  .pkg-section-title:first-of-type { margin-top: 4px; }
-  .pkg-section-dim { color: #555; }
-
-  .pkg-tier-box {
-    margin-top: 14px;
-    background: rgba(240,192,64,.04);
-    border: 1px solid rgba(240,192,64,.18);
-    border-radius: 10px;
-    padding: 12px 14px;
-    display: flex;
-    flex-direction: column;
-    gap: 0;
-  }
-  .pkg-tier-row {
-    display: flex;
-    align-items: flex-start;
-    gap: 14px;
-    padding: 6px 0;
-  }
-  .pkg-tier-price {
-    font-size: 1.25rem;
-    font-weight: 900;
-    color: #d4a030;
-    line-height: 1;
-    min-width: 78px;
-    flex-shrink: 0;
-  }
-  .pkg-tier-price sup {
-    font-size: .7rem;
-    font-weight: 600;
-    vertical-align: super;
-  }
-  .pkg-tier-price-top { color: #f0c040; font-size: 1.4rem; }
-  .pkg-tier-details {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    flex: 1;
-  }
-  .pkg-tier-rate {
-    font-size: .7rem;
-    color: #888;
-    margin-bottom: 3px;
-  }
-  .pkg-tier-extra {
-    font-size: .76rem;
-    color: #ccc;
-    line-height: 1.35;
-  }
-  .pkg-tier-extra strong { color: #f0c040; }
-  .pkg-tier-divider {
-    height: 1px;
-    background: rgba(240,192,64,.15);
-    margin: 4px 0;
-  }
-
-  /* ── PKG GRID 3 COLONNE (override) ──────────────── */
-  .pkg-grid.pkg-grid-3 {
-    grid-template-columns: 1fr 1.15fr 1fr;
-  }
-  @media (max-width: 980px) {
-    .pkg-grid.pkg-grid-3 { grid-template-columns: 1fr; }
-  }
-
-  /* ── SELECTION GUIDE (come scegliere il pacchetto) */
-  .selection-guide {
-    background: linear-gradient(135deg, #0f1a2a, #0a1320);
-    border: 1px solid rgba(74,144,217,.35);
-    border-radius: 14px;
-    padding: 22px 24px;
-    margin-bottom: 26px;
-  }
-  .selection-guide h3 {
-    font-size: .8rem;
-    color: #4a90d9;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    margin-bottom: 14px;
-    font-weight: 700;
-  }
-  .guide-intro {
-    font-size: .85rem;
-    color: #bbb;
-    line-height: 1.55;
-    margin-bottom: 18px;
-    padding: 12px 14px;
-    background: rgba(240,192,64,.06);
-    border-left: 3px solid #f0c040;
-    border-radius: 0 8px 8px 0;
-  }
-  .guide-intro strong { color: #f0c040; }
-  .guide-rules {
-    margin-top: 18px;
-    background: rgba(255,255,255,.02);
-    border: 1px solid rgba(255,255,255,.08);
-    border-radius: 10px;
-    padding: 16px 18px;
-  }
-  .guide-rules h4 {
-    font-size: .72rem;
-    color: #f0c040;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    margin-bottom: 12px;
-    font-weight: 700;
-  }
-  .guide-rules ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .guide-rules li {
-    font-size: .82rem;
-    color: #ccc;
-    line-height: 1.5;
-    padding-left: 14px;
-    position: relative;
-  }
-  .guide-rules li::before {
-    content: '▸';
-    position: absolute;
-    left: 0;
-    color: #f0c040;
-    font-weight: 700;
-  }
-  .guide-rules strong { color: #fff; }
-  .guide-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 14px;
-  }
-  .guide-tier {
-    background: rgba(255,255,255,.02);
-    border: 1px solid rgba(255,255,255,.08);
-    border-radius: 10px;
-    padding: 14px 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .guide-budget {
-    font-size: .68rem;
-    letter-spacing: .15em;
-    text-transform: uppercase;
-    color: #888;
-    font-weight: 700;
-  }
-  .guide-action {
-    font-size: .92rem;
-    color: #fff;
-    font-weight: 600;
-    line-height: 1.4;
-  }
-  .guide-action strong { color: #f0c040; }
-  .guide-note {
-    font-size: .72rem;
-    color: #888;
-    line-height: 1.45;
-  }
-  @media (max-width: 900px) {
-    .guide-grid { grid-template-columns: 1fr; }
-  }
-
-  /* ── CONDIZIONI GARANZIA ───────────────────────── */
-  .guarantee-conditions {
-    margin-top: 30px;
-    background: linear-gradient(135deg, #1a0f1e, #120815);
-    border: 1px solid rgba(155,89,182,.35);
-    border-radius: 14px;
-    padding: 24px 26px;
-  }
-  .guarantee-conditions h3 {
-    font-size: .8rem;
-    color: #c89ee0;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    margin-bottom: 18px;
-    font-weight: 700;
-  }
-  .guar-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 14px;
-  }
-  .guar-block {
-    background: rgba(255,255,255,.02);
-    border: 1px solid rgba(255,255,255,.08);
-    border-radius: 10px;
-    padding: 14px 16px;
-  }
-  .guar-block h4 {
-    font-size: .72rem;
-    letter-spacing: .08em;
-    text-transform: uppercase;
-    margin-bottom: 10px;
-    font-weight: 700;
-  }
-  .guar-block ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .guar-block li {
-    font-size: .78rem;
-    color: #ccc;
-    line-height: 1.4;
-    padding-left: 12px;
-    position: relative;
-  }
-  .guar-block li::before {
-    content: '·';
-    position: absolute;
-    left: 0;
-    color: #666;
-    font-weight: 700;
-  }
-  .guar-block p {
-    font-size: .78rem;
-    color: #ccc;
-    line-height: 1.5;
-    margin: 0;
-  }
-  .guar-block strong { color: #fff; }
-  .guar-yes { border-color: rgba(64,192,112,.35); background: rgba(64,192,112,.05); }
-  .guar-yes h4 { color: #40c070; }
-  .guar-yes strong { color: #40c070; }
-  .guar-no { border-color: rgba(224,80,80,.35); background: rgba(224,80,80,.05); }
-  .guar-no h4 { color: #e05050; }
-  .guar-req { border-color: rgba(240,192,64,.35); background: rgba(240,192,64,.05); }
-  .guar-req h4 { color: #f0c040; }
-  .guar-benefit { border-color: rgba(155,89,182,.35); background: rgba(155,89,182,.06); }
-  .guar-benefit h4 { color: #c89ee0; }
-  .guar-benefit strong { color: #d4aaee; }
-  @media (max-width: 1024px) {
-    .guar-grid { grid-template-columns: 1fr 1fr; }
-  }
-  @media (max-width: 600px) {
-    .guar-grid { grid-template-columns: 1fr; }
-  }
-
-  /* ── NOTE INTERNE VENDITORI ─────────────────────── */
-  .internal-section {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 24px 80px;
-  }
-  .internal-banner {
-    background: linear-gradient(135deg, #2a1a0a, #1e1208);
-    border: 1px solid #e08020;
-    border-radius: 14px;
-    padding: 10px 16px;
-    font-size: .65rem;
-    letter-spacing: .15em;
-    text-transform: uppercase;
-    color: #e08020;
-    font-weight: 700;
-    text-align: center;
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-  }
-  .internal-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-  }
-  .internal-card {
-    background: linear-gradient(135deg, #1c120a, #130c06);
-    border: 1px solid rgba(224,128,32,.4);
-    border-radius: 14px;
-    padding: 22px 24px;
-  }
-  .internal-card h3 {
-    font-size: .8rem;
-    color: #e08020;
-    letter-spacing: .12em;
-    text-transform: uppercase;
-    margin-bottom: 14px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-  .internal-card h4 {
-    font-size: .78rem;
-    color: #f0c040;
-    margin: 16px 0 8px;
-    font-weight: 700;
-  }
-  .internal-card p, .internal-card li {
-    font-size: .82rem;
-    line-height: 1.55;
-    color: #ccc;
-    margin-bottom: 8px;
-  }
-  .internal-card ul {
-    padding-left: 20px;
-    margin-bottom: 8px;
-  }
-  .internal-card li { margin-bottom: 6px; }
-  .internal-card strong { color: #fff; }
-  .internal-card .pitch {
-    background: rgba(240,192,64,.08);
-    border-left: 3px solid #f0c040;
-    padding: 10px 14px;
-    margin: 10px 0;
-    font-style: italic;
-    font-size: .8rem;
-    color: #ddd;
-    border-radius: 0 6px 6px 0;
-  }
-  @media (max-width: 900px) {
-    .internal-grid { grid-template-columns: 1fr; }
-  }
-
-  /* ── ANALISI TARGET ─────────────────────────────── */
-  .target-section {
-    max-width: 1280px;
-    margin: 0 auto;
-    padding: 0 24px 40px;
-  }
-  .target-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 18px;
-  }
-  .target-hero {
-    grid-column: 1 / -1;
-    background: linear-gradient(135deg, #1a1a2e, #0f1a2a);
-    border: 1px solid #4a90d9;
-    border-radius: 16px;
-    padding: 26px 30px;
-    margin-bottom: 6px;
-  }
-  .target-hero h3 {
-    font-size: .75rem;
-    letter-spacing: .18em;
-    text-transform: uppercase;
-    color: #4a90d9;
-    margin-bottom: 14px;
-    font-weight: 700;
-  }
-  .target-hero p {
-    font-size: .95rem;
-    line-height: 1.6;
-    color: #ddd;
-    margin-bottom: 10px;
-  }
-  .target-hero p strong { color: #fff; }
-  .target-hero .framing-key {
-    display: inline-block;
-    margin-top: 6px;
-    padding: 4px 12px;
-    background: rgba(74,144,217,.15);
-    border-radius: 20px;
-    font-size: .75rem;
-    color: #4a90d9;
-    font-weight: 700;
-  }
-  @media (max-width: 900px) {
-    .target-grid { grid-template-columns: 1fr; }
-  }
+@media print {
+  .sidebar { display: none; }
+  .main { margin-left: 0; }
+  .page { display: block !important; page-break-after: always; }
+}
 </style>
 </head>
 <body>
 
-<!-- TOOLBAR -->
-<div class="toolbar">
-  <span class="toolbar-label">Mappa</span>
-  <button class="btn btn-edit" id="btnEdit" onclick="toggleEdit()">✏️ Modifica</button>
-  <button class="btn btn-save" id="btnSave" onclick="saveAll()">💾 Salva</button>
-  <button class="btn btn-clear" id="btnClear" onclick="clearSaved()">↺ Reset</button>
-  <button class="btn btn-pdf" onclick="exportPdf()">⬇ PDF</button>
-  <span class="save-indicator" id="saveIndicator">Salvato ✓</span>
-</div>
-
-<h1 class="page-title" contenteditable="false" data-key="page-title">Mappa Mentale — Offerta Alessandro De Martino</h1>
-
-<div class="usp-banner">
-  <span class="usp-icon">🏛️</span>
-  <span class="usp-text">L'<strong>unico metodo di guadagno</strong> che permette di <strong>guadagnare da casa senza Partita IVA</strong> — 100% legale, tassato alla fonte, zero dichiarazione redditi.</span>
-</div>
-
-<div class="map">
-
-  <!-- ══ CENTER ══ -->
-  <div class="center">
-    <div class="center-node">
-      <span class="brand">Revoluzione Matched Betting</span>
-      <span class="name">Alessandro<br>De Martino</span>
-      <span class="tag">Protocollo Bonus<br>Matematico</span>
+<!-- ══════════════════════════════════════════════════════
+     SIDEBAR NAVIGATION
+     ══════════════════════════════════════════════════════ -->
+<aside class="sidebar">
+  <div class="sidebar-header">
+    <div class="sidebar-brand">Mappa Strategica</div>
+    <div class="sidebar-title">Alessandro De Martino</div>
+    <div class="sidebar-sub">Matched Betting Italia</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">
+      <div class="nav-section-label">Generale</div>
+      <a class="nav-item active" onclick="showPage('dashboard')" data-page="dashboard">
+        <span class="nav-icon">🏠</span> Dashboard
+      </a>
+      <a class="nav-item" onclick="showPage('mappa')" data-page="mappa">
+        <span class="nav-icon">🗺️</span> Mappa Offerta
+      </a>
+      <a class="nav-item" onclick="showPage('target')" data-page="target">
+        <span class="nav-icon">🎯</span> Analisi Target
+      </a>
     </div>
+    <div class="nav-section">
+      <div class="nav-section-label">Strategia</div>
+      <a class="nav-item" onclick="showPage('usp')" data-page="usp">
+        <span class="nav-icon">💡</span> USP & Big Idea
+      </a>
+      <a class="nav-item" onclick="showPage('naming')" data-page="naming">
+        <span class="nav-icon">🏷️</span> Naming
+        <span class="nav-badge badge-red">WIP</span>
+      </a>
+      <a class="nav-item" onclick="showPage('visual')" data-page="visual">
+        <span class="nav-icon">🎨</span> Visual Hammer
+      </a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-label">Offerta</div>
+      <a class="nav-item" onclick="showPage('prodotti')" data-page="prodotti">
+        <span class="nav-icon">🧩</span> Prodotti
+      </a>
+      <a class="nav-item" onclick="showPage('pacchetti-offerta')" data-page="pacchetti-offerta">
+        <span class="nav-icon">📦</span> Pacchetti
+      </a>
+      <a class="nav-item" onclick="showPage('bonus')" data-page="bonus">
+        <span class="nav-icon">🎁</span> Bonus & Materiali
+      </a>
+      <a class="nav-item" onclick="showPage('pacchetti')" data-page="pacchetti">
+        <span class="nav-icon">💰</span> Pacchetti Interni
+        <span class="nav-badge">VENDITORI</span>
+      </a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-label">Prove Sociali</div>
+      <a class="nav-item" onclick="showPage('testimonianze')" data-page="testimonianze">
+        <span class="nav-icon">⭐</span> Testimonianze
+      </a>
+      <a class="nav-item" onclick="showPage('autorita')" data-page="autorita">
+        <span class="nav-icon">🏛️</span> Autorità
+      </a>
+    </div>
+    <div class="nav-section">
+      <div class="nav-section-label">Marketing</div>
+      <a class="nav-item" onclick="showPage('funnel')" data-page="funnel">
+        <span class="nav-icon">🔄</span> Funnel
+      </a>
+      <a class="nav-item" onclick="showPage('organico')" data-page="organico">
+        <span class="nav-icon">📱</span> Organico
+      </a>
+      <a class="nav-item" onclick="showPage('competitor')" data-page="competitor">
+        <span class="nav-icon">🔍</span> Competitor
+        <span class="nav-badge badge-green">KEY</span>
+      </a>
+    </div>
+  </nav>
+</aside>
+
+<!-- ══════════════════════════════════════════════════════
+     MAIN CONTENT AREA
+     ══════════════════════════════════════════════════════ -->
+<main class="main">
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     PAGE: DASHBOARD
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="page active" id="page-dashboard">
+  <div class="page-header">
+    <h1>Dashboard</h1>
+    <p>Panoramica completa del progetto — Alessandro De Martino · Matched Betting Italia</p>
   </div>
 
-  <!-- ══ COL LEFT ══ -->
-  <div class="col-left">
+  <div class="info-box info-gold">
+    <strong>Progetto attivo.</strong> Questa mappa strategica contiene tutto il materiale per strutturare l'offerta, il funnel e il posizionamento di Alessandro. Clicca su ogni sezione per i dettagli.
+  </div>
 
-    <!-- METODO -->
-    <div class="card theme-gold">
-      <div class="card-title"><span class="dot"></span>Il Metodo — Come Funziona</div>
-      <div class="item"><span class="icon">🎯</span><div>Monetizzare i <strong>bonus dei siti di scommesse</strong></div></div>
-      <div class="item"><span class="icon">⚖️</span><div><strong>2 operazioni opposte</strong> sullo stesso evento</div></div>
-      <div class="item"><span class="icon">🔒</span><div><strong>Impossibile perdere soldi</strong></div></div>
-      <div class="item"><span class="icon">🤖</span><div>Software fa i calcoli al posto tuo</div></div>
+  <div class="dash-grid">
+    <div class="dash-card" onclick="showPage('mappa')">
+      <div class="dash-card-icon">🗺️</div>
+      <div class="dash-card-title">Mappa Offerta</div>
+      <div class="dash-card-desc">Mappa mentale con metodo, vantaggi, offerta, obiezioni e posizionamento</div>
+      <div class="dash-card-status status-ok">Compilata</div>
+    </div>
+    <div class="dash-card" onclick="showPage('target')">
+      <div class="dash-card-icon">🎯</div>
+      <div class="dash-card-title">Analisi Target</div>
+      <div class="dash-card-desc">Persona cliente, pain points, benefici desiderati, convinzioni da superare</div>
+      <div class="dash-card-status status-ok">Compilata</div>
+    </div>
+    <div class="dash-card" onclick="showPage('usp')">
+      <div class="dash-card-icon">💡</div>
+      <div class="dash-card-title">USP & Big Idea</div>
+      <div class="dash-card-desc">Proposta unica di valore generica + big idea post-VSL</div>
+      <div class="dash-card-status status-wip">Da definire in VSL</div>
+    </div>
+    <div class="dash-card" onclick="showPage('naming')">
+      <div class="dash-card-icon">🏷️</div>
+      <div class="dash-card-title">Naming</div>
+      <div class="dash-card-desc">Nomi decisi + nomi in sospeso da scegliere in VSL</div>
+      <div class="dash-card-status status-wip">Parziale</div>
+    </div>
+    <div class="dash-card" onclick="showPage('visual')">
+      <div class="dash-card-icon">🎨</div>
+      <div class="dash-card-title">Visual Hammer</div>
+      <div class="dash-card-desc">Logo, identità visiva, proposta grafica</div>
+      <div class="dash-card-status status-todo">Da creare</div>
+    </div>
+    <div class="dash-card" onclick="showPage('prodotti')">
+      <div class="dash-card-icon">🧩</div>
+      <div class="dash-card-title">Prodotti</div>
+      <div class="dash-card-desc">Singoli elementi vendibili: corsi, software, coaching, consulenze, add-on</div>
+      <div class="dash-card-status status-ok">Compilata</div>
+    </div>
+    <div class="dash-card" onclick="showPage('pacchetti-offerta')">
+      <div class="dash-card-icon">📦</div>
+      <div class="dash-card-title">Pacchetti</div>
+      <div class="dash-card-desc">Bundle che combinano i prodotti: Video Corso, Centrale, Elite</div>
+      <div class="dash-card-status status-ok">Compilata</div>
+    </div>
+    <div class="dash-card" onclick="showPage('bonus')">
+      <div class="dash-card-icon">🎁</div>
+      <div class="dash-card-title">Bonus & Materiali</div>
+      <div class="dash-card-desc">Materiali trasformabili in bonus o da creare per VSL</div>
+      <div class="dash-card-status status-wip">Da esplorare</div>
+    </div>
+    <div class="dash-card" onclick="showPage('testimonianze')">
+      <div class="dash-card-icon">⭐</div>
+      <div class="dash-card-title">Testimonianze</div>
+      <div class="dash-card-desc">Tutte le testimonianze con link alle fonti</div>
+      <div class="dash-card-status status-ok">Compilata</div>
+    </div>
+    <div class="dash-card" onclick="showPage('autorita')">
+      <div class="dash-card-icon">🏛️</div>
+      <div class="dash-card-title">Autorità</div>
+      <div class="dash-card-desc">Elementi di autorità esistenti + proposte da creare</div>
+      <div class="dash-card-status status-wip">Parziale</div>
+    </div>
+    <div class="dash-card" onclick="showPage('funnel')">
+      <div class="dash-card-icon">🔄</div>
+      <div class="dash-card-title">Funnel</div>
+      <div class="dash-card-desc">Percorsi di funnel previsti</div>
+      <div class="dash-card-status status-wip">Da strutturare</div>
+    </div>
+    <div class="dash-card" onclick="showPage('organico')">
+      <div class="dash-card-icon">📱</div>
+      <div class="dash-card-title">Organico</div>
+      <div class="dash-card-desc">Bio, profili social, strategia contenuti organici</div>
+      <div class="dash-card-status status-todo">Da creare</div>
+    </div>
+    <div class="dash-card" onclick="showPage('competitor')">
+      <div class="dash-card-icon">🔍</div>
+      <div class="dash-card-title">Competitor</div>
+      <div class="dash-card-desc">Analisi competitor principali + i loro funnel — sezione chiave per Giusi</div>
+      <div class="dash-card-status status-todo">Da fare ricerca</div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     PAGE: MAPPA OFFERTA
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="page" id="page-mappa">
+  <div class="page-header">
+    <h1>Mappa Offerta</h1>
+    <p>Mappa mentale con il metodo, i vantaggi, l'offerta e il posizionamento</p>
+  </div>
+
+  <div class="grid-2">
+    <!-- IL METODO -->
+    <div class="s-card s-gold">
+      <h3><span class="dot"></span> Il Metodo — Come Funziona</h3>
+      <ul>
+        <li><span class="icon">🎯</span><div>Monetizzare i <strong>bonus dei siti di scommesse</strong></div></li>
+        <li><span class="icon">⚖️</span><div><strong>2 operazioni opposte</strong> sullo stesso evento</div></li>
+        <li><span class="icon">🔒</span><div><strong>Impossibile perdere soldi</strong></div></li>
+        <li><span class="icon">🤖</span><div>Software fa i calcoli al posto tuo</div></li>
+      </ul>
     </div>
 
     <!-- VANTAGGI -->
-    <div class="card theme-green">
-      <div class="card-title"><span class="dot"></span>Vantaggi Chiave</div>
-      <div class="item"><span class="icon">✅</span><div><strong>Profitto matematico e prevedibile</strong></div></div>
-      <div class="item"><span class="icon">✅</span><div><strong>No Partita IVA</strong></div></div>
-      <div class="item"><span class="icon">✅</span><div><strong>Completamente esentasse</strong></div></div>
-      <div class="item"><span class="icon">✅</span><div><strong>20–30 min/giorno</strong></div></div>
-      <div class="item"><span class="icon">✅</span><div><strong>Basta uno smartphone</strong></div></div>
-      <div class="item"><span class="icon">✅</span><div><strong>Si autofinanzia</strong></div></div>
+    <div class="s-card s-green">
+      <h3><span class="dot"></span> Vantaggi Chiave</h3>
+      <ul>
+        <li><span class="icon">✅</span><div><strong>Profitto matematico e prevedibile</strong></div></li>
+        <li><span class="icon">✅</span><div><strong>No Partita IVA</strong></div></li>
+        <li><span class="icon">✅</span><div><strong>Completamente esentasse</strong></div></li>
+        <li><span class="icon">✅</span><div><strong>20–30 min/giorno</strong></div></li>
+        <li><span class="icon">✅</span><div><strong>Basta uno smartphone</strong></div></li>
+        <li><span class="icon">✅</span><div><strong>Si autofinanzia</strong></div></li>
+      </ul>
     </div>
 
     <!-- PER CHI È -->
-    <div class="card theme-purple">
-      <div class="card-title"><span class="dot"></span>Per Chi È</div>
-      <div class="item"><span class="icon">👤</span><div>Chi <strong>parte da zero</strong>, no esperienza online</div></div>
-      <div class="item"><span class="icon">👤</span><div>Chi ha provato altri business online <strong>senza risultati</strong></div></div>
-      <div class="item"><span class="icon">👤</span><div>Chi vuole <strong>un'entrata extra</strong> stabile ogni mese</div></div>
-      <div class="item"><span class="icon">👤</span><div>Chi ha già fatto MB ma <strong>non scala</strong></div></div>
-      <div class="item"><span class="icon">🚫</span><div>Non per chi non vuole applicare o non è motivato</div></div>
+    <div class="s-card s-purple">
+      <h3><span class="dot"></span> Per Chi È</h3>
+      <ul>
+        <li><span class="icon">👤</span><div>Chi <strong>parte da zero</strong>, no esperienza online</div></li>
+        <li><span class="icon">👤</span><div>Chi ha provato altri business online <strong>senza risultati</strong></div></li>
+        <li><span class="icon">👤</span><div>Chi vuole <strong>un'entrata extra</strong> stabile ogni mese</div></li>
+        <li><span class="icon">👤</span><div>Chi ha già fatto MB ma <strong>non scala</strong></div></li>
+        <li><span class="icon">🚫</span><div>Non per chi non vuole applicare o non è motivato</div></li>
+      </ul>
     </div>
-
-  </div>
-
-  <!-- ══ COL RIGHT ══ -->
-  <div class="col-right">
 
     <!-- L'OFFERTA -->
-    <div class="card theme-cyan">
-      <div class="card-title"><span class="dot"></span>L'Offerta</div>
-      <div class="item"><span class="icon">📞</span><div><strong>Coaching gratuita 30 min</strong></div></div>
-      <div class="item"><span class="icon">👥</span><div><strong>Max 5 nuovi studenti/mese</strong></div></div>
-      <div class="item"><span class="icon">🗺️</span><div>Affiancamento personalizzato</div></div>
-      <div class="item"><span class="icon">🏆</span><div>Team di coach esperti interni</div></div>
-      <div class="item"><span class="icon">📋</span><div>Questionario pre-call</div></div>
-    </div>
-
-    <!-- AUTORITÀ -->
-    <div class="card theme-orange">
-      <div class="card-title"><span class="dot"></span>Autorità — Chi è Alessandro</div>
-      <div class="item"><span class="icon">📅</span><div><strong>7 anni nel settore</strong> (dal 2019)</div></div>
-      <div class="item"><span class="icon">💰</span><div><strong>€95.000 netti in 12 mesi</strong></div></div>
-      <div class="item"><span class="icon">📈</span><div>Fino a <strong>€18.000 in un singolo mese</strong></div></div>
-      <div class="item"><span class="icon">👨‍👩‍👧</span><div><strong>1.118 studenti italiani</strong></div></div>
+    <div class="s-card s-cyan">
+      <h3><span class="dot"></span> L'Offerta</h3>
+      <ul>
+        <li><span class="icon">📞</span><div><strong>Coaching gratuita 30 min</strong></div></li>
+        <li><span class="icon">👥</span><div><strong>Max 5 nuovi studenti/mese</strong></div></li>
+        <li><span class="icon">🗺️</span><div>Affiancamento personalizzato</div></li>
+        <li><span class="icon">🏆</span><div>Team di coach esperti interni</div></li>
+        <li><span class="icon">📋</span><div>Questionario pre-call</div></li>
+      </ul>
     </div>
 
     <!-- OBIEZIONI -->
-    <div class="card theme-red">
-      <div class="card-title"><span class="dot"></span>Obiezioni da Superare</div>
-      <div class="item"><span class="icon">❓</span><div>"Online è pieno di truffe"</div></div>
-      <div class="item"><span class="icon">❓</span><div>"Non sono capace, sono vecchio"</div></div>
-      <div class="item"><span class="icon">❓</span><div>"Per guadagnare bisogna faticare"</div></div>
-      <div class="item"><span class="icon">❓</span><div>"Queste cose funzionano solo per giovani"</div></div>
-      <div class="item"><span class="icon">❓</span><div>"È come scommettere"</div></div>
+    <div class="s-card s-red">
+      <h3><span class="dot"></span> Obiezioni da Superare</h3>
+      <ul>
+        <li><span class="icon">❓</span><div>"Online è pieno di truffe"</div></li>
+        <li><span class="icon">❓</span><div>"Non sono capace, sono vecchio"</div></li>
+        <li><span class="icon">❓</span><div>"Per guadagnare bisogna faticare"</div></li>
+        <li><span class="icon">❓</span><div>"Queste cose funzionano solo per giovani"</div></li>
+        <li><span class="icon">❓</span><div>"È come scommettere"</div></li>
+      </ul>
     </div>
 
+    <!-- POSIZIONAMENTO -->
+    <div class="s-card s-gold">
+      <h3><span class="dot"></span> Posizionamento & Framing</h3>
+      <ul>
+        <li><span class="icon">🧲</span><div><strong>"La Falla nel Sistema"</strong></div></li>
+        <li><span class="icon">📉</span><div><strong>NO cifre folli</strong></div></li>
+        <li><span class="icon">🤝</span><div><strong>Vendere il sogno</strong></div></li>
+        <li><span class="icon">🇮🇹</span><div><strong>Differenziatore:</strong> unico in Italia a insegnarlo seriamente</div></li>
+      </ul>
+    </div>
   </div>
 
-  <!-- ══ BOTTOM ROW ══ -->
-  <div class="col-bottom">
-
-    <!-- 3 FASI -->
-    <div class="card theme-blue">
-      <div class="card-title"><span class="dot"></span>Le 3 Fasi del Protocollo</div>
-
-      <div class="phase">
-        <div class="phase-num ph1">1</div>
-        <div class="phase-body">
-          <div class="phase-name">Bonus Benvenuto</div>
-          <div class="phase-desc">Monetizzare i bonus di iscrizione. Apprendere le tecniche. Costruire il rapporto con le piattaforme.</div>
-          <span class="phase-result pr-base">~€1.000 una tantum</span>
+  <!-- LE 3 FASI -->
+  <div class="s-card s-blue" style="margin-top: 20px;">
+    <h3><span class="dot"></span> Le 3 Fasi del Protocollo</h3>
+    <div class="grid-3">
+      <div style="padding: 10px 0;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span style="width:32px;height:32px;border-radius:50%;background:#f0c040;color:#000;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem">1</span>
+          <strong style="color:#fff">Bonus Benvenuto</strong>
         </div>
+        <p style="font-size:.82rem;color:#aaa;line-height:1.5">Monetizzare i bonus di iscrizione. Apprendere le tecniche. Costruire il rapporto con le piattaforme.</p>
+        <span class="tag tag-blue" style="margin-top:8px;display:inline-block">~€1.000 una tantum</span>
       </div>
-
-      <div class="phase">
-        <div class="phase-num ph2">2</div>
-        <div class="phase-body">
-          <div class="phase-name">Profilazione</div>
-          <div class="phase-desc">Consolidare il rapporto con le piattaforme → ricevere bonus personali sempre più alti ogni mese.</div>
-          <span class="phase-result pr-base" style="margin-right:6px">Base: ~€500/mese</span>
-          <span class="phase-result pr-vip">VIP: ~€1.000/mese</span>
+      <div style="padding: 10px 0;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span style="width:32px;height:32px;border-radius:50%;background:#4a90d9;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem">2</span>
+          <strong style="color:#fff">Profilazione</strong>
         </div>
+        <p style="font-size:.82rem;color:#aaa;line-height:1.5">Consolidare il rapporto con le piattaforme — ricevere bonus personali sempre più alti ogni mese.</p>
+        <span class="tag tag-blue" style="margin-top:8px;display:inline-block">Base: ~€500/mese</span>
+        <span class="tag tag-gold" style="margin-top:8px;display:inline-block">VIP: ~€1.000/mese</span>
       </div>
-
-      <div class="phase">
-        <div class="phase-num ph3">3</div>
-        <div class="phase-body">
-          <div class="phase-name">Multi-account</div>
-          <div class="phase-desc">Replicare fase 1 + 2 su più identità. Scalata orizzontale illimitata.</div>
-          <span class="phase-result pr-scale">×2, ×3, ×4 i risultati</span>
+      <div style="padding: 10px 0;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+          <span style="width:32px;height:32px;border-radius:50%;background:#40c070;color:#000;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:.85rem">3</span>
+          <strong style="color:#fff">Multi-account</strong>
         </div>
+        <p style="font-size:.82rem;color:#aaa;line-height:1.5">Replicare fase 1 + 2 su più identità. Scalata orizzontale illimitata.</p>
+        <span class="tag tag-green" style="margin-top:8px;display:inline-block">×2, ×3, ×4 i risultati</span>
       </div>
     </div>
-
-    <!-- RISULTATI STUDENTI -->
-    <div class="card theme-green" style="background:linear-gradient(135deg,#0b1e14,#08180f)">
-      <div class="card-title"><span class="dot"></span>Risultati Studenti (Testimonianze)</div>
-      <div class="result-grid">
-        <div class="result-item">
-          <div class="who">Michael</div>
-          <div class="amt amt-green">€621/mese</div>
-          <div class="detail">1 account base</div>
-        </div>
-        <div class="result-item">
-          <div class="who">Andrea</div>
-          <div class="amt amt-green">€821/mese</div>
-          <div class="detail">2 account base</div>
-        </div>
-        <div class="result-item">
-          <div class="who">Giovanna</div>
-          <div class="amt amt-green">€1.412</div>
-          <div class="detail">in 2 mesi, 1 account base</div>
-        </div>
-        <div class="result-item">
-          <div class="who">Stefano</div>
-          <div class="amt amt-gold">€1.196/mese</div>
-          <div class="detail">1 account VIP</div>
-        </div>
-        <div class="result-item">
-          <div class="who">Marco</div>
-          <div class="amt amt-gold">€2.841/mese</div>
-          <div class="detail">3 account VIP</div>
-        </div>
-        <div class="result-item">
-          <div class="who">Leonardo</div>
-          <div class="amt amt-gold">€1.836/mese</div>
-          <div class="detail">2 account VIP</div>
-        </div>
-        <div class="result-item">
-          <div class="who">Matteo (coach)</div>
-          <div class="amt amt-blue">€3.429/mese</div>
-          <div class="detail">4 account</div>
-        </div>
-        <div class="result-item">
-          <div class="who">Enrico (coach)</div>
-          <div class="amt amt-blue">€3.474/mese</div>
-          <div class="detail">3 VIP + 1 base</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- FRAMING / POSIZIONAMENTO -->
-    <div class="card theme-gold">
-      <div class="card-title"><span class="dot"></span>Posizionamento & Framing</div>
-      <div class="item"><span class="icon">🧲</span><div><strong>"La Falla nel Sistema"</strong></div></div>
-      <div class="item"><span class="icon">📉</span><div><strong>NO cifre folli</strong></div></div>
-      <div class="item"><span class="icon">🤝</span><div><strong>Vendere il sogno</strong></div></div>
-      <div class="item"><span class="icon">🇮🇹</span><div><strong>Differenziatore:</strong> unico in Italia a insegnarlo seriamente</div></div>
-    </div>
-
   </div>
 
+  <!-- AUTORITÀ (breve) -->
+  <div class="s-card s-orange" style="margin-top: 20px;">
+    <h3><span class="dot"></span> Autorità — Chi è Alessandro</h3>
+    <div class="grid-2" style="gap:12px">
+      <ul>
+        <li><span class="icon">📅</span><div><strong>7 anni nel settore</strong> (dal 2019)</div></li>
+        <li><span class="icon">💰</span><div><strong>€95.000 netti in 12 mesi</strong></div></li>
+      </ul>
+      <ul>
+        <li><span class="icon">📈</span><div>Fino a <strong>€18.000 in un singolo mese</strong></div></li>
+        <li><span class="icon">👨‍👩‍👧</span><div><strong>1.118 studenti italiani</strong></div></li>
+      </ul>
+    </div>
+  </div>
 </div>
 
-<!-- ══ ANALISI TARGET ══ -->
-<div class="target-section">
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     PAGE: ANALISI TARGET
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="page" id="page-target">
+  <div class="page-header">
+    <h1>Analisi Target — Avatar "Salvo"</h1>
+    <p>Cliente tipo inconsapevole · copy grezzo non-filtrato · il 90% dei clienti di Alessandro è questa persona (il mestiere cambia: pizzaiolo, muratore, operaio, cameriere — il dolore è identico)</p>
+  </div>
 
-  <div class="section-divider"><span>Analisi Target — Persona Cliente</span></div>
+  <!-- FRAMING PRINCIPALE -->
+  <div class="info-box info-gold">
+    <strong>Framing Principale:</strong> Guadagnare da casa un'umile ed onesta entrata secondaria slegata dal proprio tempo, capace di raddoppiare lo stipendio, tramite la monetizzazione dei bonus dei siti di scommesse. Non promettiamo cifre folli, ma <strong>50–70–100€ in più al giorno</strong>. Target <strong>inconsapevole</strong> — ci distinguiamo per i risultati di oltre 1.118 italiani comuni.
+  </div>
 
-  <div class="target-grid">
+  <!-- AVATAR PROFILE -->
+  <div class="s-card s-gold" style="margin-bottom:20px">
+    <h3><span class="dot"></span> Avatar Principale — Salvatore "Salvo" Esposito</h3>
+    <div class="grid-2" style="margin-top:12px">
+      <ul>
+        <li><span class="icon">👤</span><div><strong>52 anni</strong> · maschio · Provincia di Napoli (Sud/hinterland Nord tipo Brescia/Mantova)</div></li>
+        <li><span class="icon">🍕</span><div><strong>Pizzaiolo</strong> in pizzeria di quartiere — 12 anni stesso locale</div></li>
+        <li><span class="icon">💶</span><div><strong>1.450 €/mese</strong> netti · martedì-domenica 17:30→1:30 · lunedì riposo</div></li>
+        <li><span class="icon">👨‍👩‍👧‍👦</span><div>Sposato da 24 anni con Rosaria · 2 figli (Martina 19 uni. fuori sede, Christian 15)</div></li>
+        <li><span class="icon">🏠</span><div>Reddito familiare <strong>~2.200 €</strong> · <strong>zero risparmi</strong> · conto 400–1.800 €</div></li>
+      </ul>
+      <ul>
+        <li><span class="icon">📱</span><div>Android Samsung 4 anni · WhatsApp, Facebook, YouTube · NON usa email se non obbligato</div></li>
+        <li><span class="icon">🏫</span><div><strong>Terza media</strong> · ha smesso di studiare a 15 anni</div></li>
+        <li><span class="icon">🚗</span><div>Fiat Punto 2011 · 180.000 km · rata gomme 520 €</div></li>
+        <li><span class="icon">⚽</span><div>Tifa Napoli · DAZN · schedina 10–15€ al bar la domenica "tanto per divertirmi"</div></li>
+        <li><span class="icon">🛒</span><div>Online <strong>non compra</strong> di sua iniziativa (lo fa la moglie)</div></li>
+      </ul>
+    </div>
+    <p style="font-size:.9rem;line-height:1.65;color:#bbb;margin-top:14px;padding-top:14px;border-top:1px solid #1a1a25"><strong>Descrizione in 1 riga:</strong> Salvo è un uomo stanco. Non depresso, non disperato — <em>stanco</em>. Quella stanchezza cronica che senti nelle spalle quando hai 52 anni, lavori in piedi da quando ne avevi 16, e sai che ti aspettano altri 15 anni così. Guarda Instagram di nascosto e vede ragazzi di 25 anni con Rolex e Mercedes e pensa "ma dove cazzo sbaglio io?". Non lo dice mai ad alta voce. Ma ci pensa. Spesso.</p>
+  </div>
 
-    <!-- HERO / POSIZIONAMENTO GENERALE -->
-    <div class="target-hero">
-      <h3>🎯 Framing Principale</h3>
-      <p>Guadagnare da casa/online/da remoto, un'<strong>umile ed onesta entrata secondaria slegata dal proprio tempo</strong>, capace di raddoppiare lo stipendio, tramite la monetizzazione dei bonus dei siti di scommesse.</p>
-      <p>Non promettiamo cifre folli, ma <strong>50–70–100€ in più al giorno</strong> — un intero stipendio extra a fine mese.</p>
-      <p>Puntare su quello che possono ottenere, <strong>vendergli il sogno</strong>, piuttosto che picchiare sul pain.</p>
-      <p>Target <strong>inconsapevole</strong> riguardo al mondo dell'online — vede tante ads ma niente lo convince, sembra tutta fuffa. Ci distinguiamo per i risultati raggiunti da oltre <strong>1.118 italiani comuni</strong> che ora guadagnano bene tutti i mesi con il nostro protocollo.</p>
-      <span class="framing-key">🧲 "La Falla nel Sistema"</span>
+  <!-- 10 IDEE PRECONCETTE -->
+  <div class="s-card s-red" style="margin-bottom:20px">
+    <h3><span class="dot"></span> 10 Idee Preconcette / Pregiudizi (le parole di Salvo, non filtrate)</h3>
+    <ul>
+      <li><span class="icon">1️⃣</span><div><strong>"Online è tutta una fregatura"</strong> — "Mio cugino ha perso 3.000€ col trading"</div></li>
+      <li><span class="icon">2️⃣</span><div><strong>"Per guadagnare davvero ti devi spaccare la schiena"</strong> — "I soldi si fanno col sudore"</div></li>
+      <li><span class="icon">3️⃣</span><div><strong>"Sono della vecchia generazione, ste cose non sono per me"</strong></div></li>
+      <li><span class="icon">4️⃣</span><div><strong>"Le scommesse sono gioco d'azzardo, il gioco d'azzardo ti rovina"</strong></div></li>
+      <li><span class="icon">5️⃣</span><div><strong>"Se fosse davvero così facile, lo farebbero tutti"</strong></div></li>
+      <li><span class="icon">6️⃣</span><div><strong>"I guru su internet sono tutti venditori di fumo con la Lambo a noleggio"</strong></div></li>
+      <li><span class="icon">7️⃣</span><div><strong>"I soldi veri si fanno solo con un'attività propria o un lavoro sicuro"</strong></div></li>
+      <li><span class="icon">8️⃣</span><div><strong>"Per fare soldi online devi saper fare siti, programmare, capirci di computer"</strong></div></li>
+      <li><span class="icon">9️⃣</span><div><strong>"Devi avere soldi per fare soldi"</strong></div></li>
+      <li><span class="icon">🔟</span><div><strong>"Alla mia età devo solo tirare a campare fino alla pensione"</strong></div></li>
+    </ul>
+  </div>
+
+  <!-- PAURE + EMOZIONI -->
+  <div class="grid-2" style="margin-bottom:20px">
+    <div class="s-card s-red">
+      <h3><span class="dot"></span> Le 5 emozioni viscerali</h3>
+      <ul>
+        <li><span class="icon">😤</span><div><strong>Frustrazione sorda</strong> — "Quarant'anni di lavoro onesto, pe' cche?"</div></li>
+        <li><span class="icon">😳</span><div><strong>Vergogna</strong> — quando la figlia chiede 50€ extra e lui deve dire "aspe' un attimo a'"</div></li>
+        <li><span class="icon">🔥</span><div><strong>Invidia vera</strong> — verso il cugino in Germania che guadagna 3.500€</div></li>
+        <li><span class="icon">⏳</span><div><strong>Paura che si stia facendo tardi</strong> — "quanto mi resta per cambiare?"</div></li>
+        <li><span class="icon">🐹</span><div><strong>Senso di impotenza</strong> — cricceto nella ruota, zero movimento</div></li>
+      </ul>
     </div>
 
-    <!-- BENEFICI DESIDERATI -->
-    <div class="card theme-green">
-      <div class="card-title"><span class="dot"></span>Benefici Desiderati</div>
-      <div class="item"><span class="icon">💸</span><div>Pagare debiti</div></div>
-      <div class="item"><span class="icon">🏦</span><div>Più risparmi</div></div>
-      <div class="item"><span class="icon">🧘</span><div>Tranquillità, indipendenza, stabilità finanziaria</div></div>
-      <div class="item"><span class="icon">😌</span><div>Arrivare a fine mese sereni, con soldi per viaggi/regali/sfizi</div></div>
-      <div class="item"><span class="icon">👶</span><div>Futuro migliore per i figli o serenità per farli</div></div>
-      <div class="item"><span class="icon">🏡</span><div>Comprare casa più grande o saldare il mutuo</div></div>
-      <div class="item"><span class="icon">👨‍👩‍👧</span><div>Aiutare la famiglia</div></div>
-      <div class="item"><span class="icon">🌟</span><div>Realizzare i propri sogni</div></div>
-      <div class="item"><span class="icon">🏠</span><div>Lavorare da casa, più tempo con i figli</div></div>
-      <div class="item"><span class="icon">✈️</span><div>Viaggiare, vivere sereni</div></div>
-      <div class="item"><span class="icon">🎨</span><div>Tempo per vivere le proprie passioni</div></div>
+    <div class="s-card s-red">
+      <h3><span class="dot"></span> 5 scenari catastrofici che teme</h3>
+      <ul>
+        <li><span class="icon">🚨</span><div>"Rimanere fottuto qua dentro fino a 67 anni, ginocchia rotte e artrosi, pensione 1.000€ scarsi"</div></li>
+        <li><span class="icon">💔</span><div>"Dover chiamare Martina e dirle: papà non ce la fa, devi tornare a casa"</div></li>
+        <li><span class="icon">⚡</span><div>"Succede qualcosa — malattia, licenziamento — e io tengo 400€ sul conto"</div></li>
+        <li><span class="icon">😞</span><div>"Che mia moglie un giorno mi guardi e pensi 'ma perché me so' sposata stu' fallito'"</div></li>
+        <li><span class="icon">⚰️</span><div>"Arrivare a 70 anni e pensare 'non ho fatto un cazzo nella vita mia, solo pizze'"</div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SCUSE RIMANDO -->
+  <div class="s-card s-orange" style="margin-bottom:20px">
+    <h3><span class="dot"></span> Scuse per rimandare la decisione (da anticipare in VSL)</h3>
+    <ul>
+      <li><span class="icon">🗓️</span><div>"Mo nun tengo tempo, mettimele ca fernesce 'o campionato e ce penso"</div></li>
+      <li><span class="icon">👰</span><div>"Devo prima chiedere a mia moglie" (sa che gli dirà no perché ha paura)</div></li>
+      <li><span class="icon">🎓</span><div>"Aspetto che Martina finisca l'università, poi vedo"</div></li>
+      <li><span class="icon">⏱️</span><div>"Eh ma adesso c'è un brutto momento" (è SEMPRE un brutto momento)</div></li>
+      <li><span class="icon">🗓️</span><div>"Vediamo a gennaio, con l'anno nuovo"</div></li>
+      <li><span class="icon">🤔</span><div>"Prima mi informo bene, ci penso 2-3 mesi" (il "penso" è l'eutanasia del sogno)</div></li>
+      <li><span class="icon">💶</span><div>"I soldi per iniziare mo nun tengo, quando li metto da parte ci provo"</div></li>
+    </ul>
+  </div>
+
+  <!-- LATO VANTAGGIOSO DI NON CAMBIARE -->
+  <div class="s-card s-purple" style="margin-bottom:20px">
+    <h3><span class="dot"></span> Il lato "vantaggioso" del non cambiare (obiezioni nascoste)</h3>
+    <p style="font-size:.88rem;color:#bbb;margin-bottom:10px">Se Salvo non prova nulla, cosa <em>guadagna</em>? Queste sono le vere resistenze da neutralizzare in VSL.</p>
+    <ul>
+      <li><span class="icon">🗣️</span><div><strong>Può continuare a lamentarsi</strong> — lamentarsi è un'identità</div></li>
+      <li><span class="icon">🛑</span><div><strong>Non deve affrontare la paura di sbagliare</strong> — "fallimento assicurato" = tranquillità</div></li>
+      <li><span class="icon">🎯</span><div><strong>Può dare la colpa agli altri</strong> — governo, crisi, destino</div></li>
+      <li><span class="icon">💍</span><div><strong>Non deve dire alla moglie "tesoro avevo torto"</strong></div></li>
+      <li><span class="icon">🛋️</span><div><strong>Non deve uscire dalla zona di conforto emotiva</strong> — la sofferenza è il suo pigiama</div></li>
+      <li><span class="icon">🎖️</span><div><strong>Può continuare a essere "il povero ma onesto"</strong> — una medaglia morale</div></li>
+      <li><span class="icon">⚖️</span><div><strong>Mantiene lo status quo familiare</strong> — se cambia, tutti devono ricalibrarsi</div></li>
+    </ul>
+  </div>
+
+  <!-- 10 OBIEZIONI VSL -->
+  <div class="s-card s-blue" style="margin-bottom:20px">
+    <h3><span class="dot"></span> 10 Obiezioni che avrà sulla proposta</h3>
+    <ol style="padding-left:18px;line-height:1.8;font-size:.88rem;color:#ddd">
+      <li>"Troppo bello per essere vero. Dove sta la fregatura?"</li>
+      <li>"Funziona pe' chi 'o vende, nun pe' chi 'o compra"</li>
+      <li>"Se veramente funzionava, i siti di scommesse chiudevano il giochetto in 2 giorni"</li>
+      <li>"Io nun so' capace 'e fà chesti cose col telefono"</li>
+      <li>"Se mia moglie scopre, mi ammazza"</li>
+      <li>"E le tasse? Come minimo pagherò il 50% allo Stato"</li>
+      <li>"Sicuramente c'è un costo ascoso. Al secondo mese ti tirano fuori 'n abbonamento"</li>
+      <li>"Funziona solo nei primi 3 mesi, poi i siti ti bloccano il conto"</li>
+      <li>"Io a 52 anni, con 'a faccia stanca mia — manco pe' campione me piglieranno"</li>
+      <li>"Se funzionava overo, mo' tenessero 'e liste d'attesa chiuse"</li>
+    </ol>
+  </div>
+
+  <div class="grid-2">
+    <!-- BENEFICI -->
+    <div class="s-card s-green">
+      <h3><span class="dot"></span> Benefici Desiderati</h3>
+      <ul>
+        <li><span class="icon">💸</span><div>Pagare debiti</div></li>
+        <li><span class="icon">🏦</span><div>Più risparmi</div></li>
+        <li><span class="icon">🧘</span><div>Tranquillità, indipendenza, stabilità finanziaria</div></li>
+        <li><span class="icon">😌</span><div>Arrivare a fine mese sereni, con soldi per viaggi/regali/sfizi</div></li>
+        <li><span class="icon">👶</span><div>Futuro migliore per i figli o serenità per farli</div></li>
+        <li><span class="icon">🏡</span><div>Comprare casa più grande o saldare il mutuo</div></li>
+        <li><span class="icon">👨‍👩‍👧</span><div>Aiutare la famiglia</div></li>
+        <li><span class="icon">🌟</span><div>Realizzare i propri sogni</div></li>
+        <li><span class="icon">🏠</span><div>Lavorare da casa, più tempo con i figli</div></li>
+        <li><span class="icon">✈️</span><div>Viaggiare, vivere sereni</div></li>
+        <li><span class="icon">🎨</span><div>Tempo per vivere le proprie passioni</div></li>
+      </ul>
     </div>
 
     <!-- PAIN POINTS -->
-    <div class="card theme-red">
-      <div class="card-title"><span class="dot"></span>Pain Points</div>
-      <div class="item"><span class="icon">💳</span><div>Troppe spese da pagare</div></div>
-      <div class="item"><span class="icon">🏭</span><div>Vita solo casa-lavoro, 9+ ore fuori casa per pochi soldi</div></div>
-      <div class="item"><span class="icon">😰</span><div>Ansia di non arrivare a fine mese</div></div>
-      <div class="item"><span class="icon">😔</span><div>Anni di sacrifici, lavoro estenuante</div></div>
-      <div class="item"><span class="icon">🚫</span><div>Rinunciare a viaggi, acquisti, casa, macchina</div></div>
-      <div class="item"><span class="icon">🔒</span><div>Lavoro che rinchiude, fa ammalare, non gratifica</div></div>
-      <div class="item"><span class="icon">💭</span><div>Non potersi più fare i conti in tasca</div></div>
-      <div class="item"><span class="icon">😴</span><div>Tornare a casa solo per dormire, non poter fare altro</div></div>
+    <div class="s-card s-red">
+      <h3><span class="dot"></span> Pain Points</h3>
+      <ul>
+        <li><span class="icon">💳</span><div>Troppe spese da pagare</div></li>
+        <li><span class="icon">🏭</span><div>Vita solo casa-lavoro, 9+ ore fuori casa per pochi soldi</div></li>
+        <li><span class="icon">😰</span><div>Ansia di non arrivare a fine mese</div></li>
+        <li><span class="icon">😔</span><div>Anni di sacrifici, lavoro estenuante</div></li>
+        <li><span class="icon">🚫</span><div>Rinunciare a viaggi, acquisti, casa, macchina</div></li>
+        <li><span class="icon">🔒</span><div>Lavoro che rinchiude, fa ammalare, non gratifica</div></li>
+        <li><span class="icon">💭</span><div>Non potersi più fare i conti in tasca</div></li>
+        <li><span class="icon">😴</span><div>Tornare a casa solo per dormire, non poter fare altro</div></li>
+      </ul>
     </div>
 
-    <!-- SOLUZIONE — COME POSIZIONARLA -->
-    <div class="card theme-gold">
-      <div class="card-title"><span class="dot"></span>Soluzione — Come Posizionarla</div>
-      <div class="item"><span class="icon">💰</span><div>Guadagnare da casa <strong>uno stipendio in più</strong></div></div>
-      <div class="item"><span class="icon">📈</span><div>Entrata extra che <strong>raddoppia lo stipendio</strong></div></div>
-      <div class="item"><span class="icon">💵</span><div>Arrivare a un fisso mensile da <strong>1.000 a 5.000 €</strong></div></div>
-      <div class="item"><span class="icon">⏱️</span><div>Tutto <strong>slegato dal proprio tempo</strong> — 20–30 min/giorno</div></div>
-      <div class="item"><span class="icon">🎯</span><div>Monetizzare bonus siti di scommesse in modo <strong>prevedibile</strong></div></div>
-      <div class="item"><span class="icon">🏦</span><div>Sul conto arrivano i frutti ogni mese</div></div>
-      <div class="item"><span class="icon">🙅</span><div>Senza capi ingrati, stipendi imbarazzanti, turni estenuanti</div></div>
-      <div class="item"><span class="icon">🏖️</span><div>Da fare <strong>dove e quando vuoi</strong> — casa, mare, vacanza</div></div>
+    <!-- SOLUZIONE -->
+    <div class="s-card s-gold">
+      <h3><span class="dot"></span> Soluzione — Come Posizionarla</h3>
+      <ul>
+        <li><span class="icon">💰</span><div>Guadagnare da casa <strong>uno stipendio in più</strong></div></li>
+        <li><span class="icon">📈</span><div>Entrata extra che <strong>raddoppia lo stipendio</strong></div></li>
+        <li><span class="icon">💵</span><div>Arrivare a un fisso mensile da <strong>1.000 a 5.000€</strong></div></li>
+        <li><span class="icon">⏱️</span><div>Tutto <strong>slegato dal proprio tempo</strong> — 20–30 min/giorno</div></li>
+        <li><span class="icon">🎯</span><div>Monetizzare bonus siti di scommesse in modo <strong>prevedibile</strong></div></li>
+        <li><span class="icon">🏖️</span><div>Da fare <strong>dove e quando vuoi</strong></div></li>
+      </ul>
     </div>
 
-    <!-- CONVINZIONI / OBIEZIONI DA SUPERARE -->
-    <div class="card theme-purple">
-      <div class="card-title"><span class="dot"></span>Convinzioni da Superare</div>
-      <div class="item"><span class="icon">💼</span><div>"Il lavoro tradizionale da 8/10 ore da più sicurezza"</div></div>
-      <div class="item"><span class="icon">🎰</span><div>Preferiscono gratta e vinci o straordinari al posto di un'entrata online</div></div>
-      <div class="item"><span class="icon">⚠️</span><div>"Online è pieno di truffe, se ne sentono di tutti i colori"</div></div>
-      <div class="item"><span class="icon">❌</span><div>"È impossibile raggiungere risultati dedicando solo 1h al giorno"</div></div>
-      <div class="item"><span class="icon">👴</span><div>"Sono della vecchia generazione, devo toccare con mano"</div></div>
-      <div class="item"><span class="icon">🆕</span><div>"Non ho mai fatto nulla online, parto da zero"</div></div>
-      <div class="item"><span class="icon">😨</span><div>Paura di fallire / responsabilità (sempre stato dipendente)</div></div>
-      <div class="item"><span class="icon">📱</span><div>"Non sono bravo con la tecnologia"</div></div>
-      <div class="item"><span class="icon">🎲</span><div>"Sembra come le scommesse, è rischioso"</div></div>
-      <div class="item"><span class="icon">⚖️</span><div>"Se fosse così legale e sicuro, lo farebbero tutti"</div></div>
+    <!-- CONVINZIONI -->
+    <div class="s-card s-purple">
+      <h3><span class="dot"></span> Convinzioni da Superare</h3>
+      <ul>
+        <li><span class="icon">💼</span><div>"Il lavoro tradizionale da 8/10 ore da più sicurezza"</div></li>
+        <li><span class="icon">🎰</span><div>Preferiscono gratta e vinci o straordinari</div></li>
+        <li><span class="icon">⚠️</span><div>"Online è pieno di truffe"</div></li>
+        <li><span class="icon">❌</span><div>"È impossibile con solo 1h al giorno"</div></li>
+        <li><span class="icon">👴</span><div>"Sono della vecchia generazione"</div></li>
+        <li><span class="icon">🆕</span><div>"Non ho mai fatto nulla online, parto da zero"</div></li>
+        <li><span class="icon">😨</span><div>Paura di fallire</div></li>
+        <li><span class="icon">📱</span><div>"Non sono bravo con la tecnologia"</div></li>
+        <li><span class="icon">🎲</span><div>"Sembra come le scommesse, è rischioso"</div></li>
+        <li><span class="icon">⚖️</span><div>"Se fosse così legale e sicuro, lo farebbero tutti"</div></li>
+      </ul>
     </div>
+  </div>
 
-    <!-- ALTERNATIVE (CHE NON FUNZIONANO) -->
-    <div class="card theme-orange">
-      <div class="card-title"><span class="dot"></span>Alternative che Considerano <span style="font-size:.6rem;color:#666;margin-left:6px">(non funzionano)</span></div>
-      <div class="item"><span class="icon">⏳</span><div>Aspettare aumenti o promozioni che non arriveranno mai</div></div>
-      <div class="item"><span class="icon">🤞</span><div>Botta di culo, raccomandazioni</div></div>
-      <div class="item"><span class="icon">🎰</span><div>Sperare nella fortuna — gratta e vinci, schedine</div></div>
-      <div class="item"><span class="icon">💸</span><div>Buttare i risparmi in sistemini dubbiosi online</div></div>
-      <div class="item"><span class="icon">⏰</span><div>Fare straordinari pagati una miseria</div></div>
-    </div>
-
+  <!-- ALTERNATIVE -->
+  <div class="s-card s-orange" style="margin-top:0">
+    <h3><span class="dot"></span> Alternative che Considerano <span style="font-size:.6rem;color:#666;margin-left:6px">(non funzionano)</span></h3>
+    <ul>
+      <li><span class="icon">⏳</span><div>Aspettare aumenti o promozioni che non arriveranno mai</div></li>
+      <li><span class="icon">🤞</span><div>Botta di culo, raccomandazioni</div></li>
+      <li><span class="icon">🎰</span><div>Sperare nella fortuna — gratta e vinci, schedine</div></li>
+      <li><span class="icon">💸</span><div>Buttare i risparmi in sistemini dubbiosi online</div></li>
+      <li><span class="icon">⏰</span><div>Fare straordinari pagati una miseria</div></li>
+    </ul>
   </div>
 </div>
 
-<!-- ══ LISTINO PACCHETTI — USO INTERNO VENDITORI ══ -->
-<div class="pacchetti-section">
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     PAGE: USP & BIG IDEA
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="page" id="page-usp">
+  <div class="page-header">
+    <h1>USP, Meccanismo Unico & Big Idea</h1>
+    <p>Proposta unica di valore + Meccanismo Unico del problema/soluzione + Big Idea in stile VSL (framework Made to Stick + Metafora 3C)</p>
+  </div>
 
-  <div class="internal-banner">
-    <span>🔒</span>
-    <span>Listino Pacchetti — Uso Interno Venditori · Non condividere con il cliente</span>
+  <div class="info-box info-gold" style="margin-bottom:20px">
+    <strong>Framework:</strong> USP = "Soluzione nuova e migliore" rispetto ai competitor diretti (trading, MLM, gig online). Il MU è una piccola svolta ad una credenza già presente del target ("i siti di scommesse ti fregano") che la ribalta ("…e puoi prendere i loro soldi, legalmente"). La Big Idea trasforma il MU in un'immagine scioccante + credibile.
+  </div>
+
+  <!-- USP + MU -->
+  <div class="grid-2">
+    <div>
+      <div class="s-card s-green">
+        <h3><span class="dot"></span> Messaggio di Marketing (base)</h3>
+        <div class="info-box info-green">
+          <strong>Formula:</strong> "Il modo più [efficace/sicuro/veloce] per [risultato desiderato] è attraverso il [Meccanismo Unico]".
+        </div>
+        <p style="font-size:.95rem;line-height:1.7;color:#ddd;margin-bottom:8px">
+          <strong>Il modo matematicamente più sicuro per un italiano sopra i 40 di mettersi in tasca 500–3.000 € al mese dal telefono — senza Partita IVA, senza competere con nessuno, senza rischiare un euro del proprio — è usare la "Falla del Bonus" dei siti di scommesse AAMS.</strong>
+        </p>
+      </div>
+
+      <div class="s-card s-gold">
+        <h3><span class="dot"></span> Meccanismo Unico (Stefan Georgi twist)</h3>
+        <p style="font-size:.88rem;line-height:1.65;color:#bbb;margin-bottom:10px">Non un meccanismo "inventato da zero", ma una <strong>piccola svolta</strong> su una credenza che Salvo <em>già ha</em> ("i siti di scommesse fregano i giocatori"): ribaltiamola.</p>
+        <ul>
+          <li><span class="icon">🧲</span><div><strong>Nuovo agente:</strong> il <em>bonus di benvenuto</em> dei siti AAMS (leva che esiste, ma nessuno sa sfruttare)</div></li>
+          <li><span class="icon">🔬</span><div><strong>Nuova causa/diagnosi:</strong> il problema NON è "non hai capitale" — è che <em>nessuno ti ha spiegato che il capitale te lo mettono i siti stessi</em></div></li>
+          <li><span class="icon">🧮</span><div><strong>Nuovo processo:</strong> protocollo 3-fasi (Bonus → Profilazione → Multi-account) applicato in sequenza matematica, non in ordine casuale</div></li>
+          <li><span class="icon">🛠️</span><div><strong>Nuovo veicolo:</strong> software "Guadagno Matematico" che calcola le puntate — zero conoscenze tecniche richieste</div></li>
+          <li><span class="icon">🚫</span><div><strong>Constraint breaker:</strong> azzera i 3 ostacoli classici (capitale, competenza tech, tempo) in un colpo solo</div></li>
+          <li><span class="icon">📐</span><div><strong>Nuovo principio:</strong> "non scommetti — copri entrambi gli esiti e incassi il bonus che ti regalano per iscriverti"</div></li>
+        </ul>
+      </div>
+
+      <div class="s-card s-blue">
+        <h3><span class="dot"></span> Perché funziona meglio dei concorrenti</h3>
+        <ul>
+          <li><span class="icon">🆚 Trading</span><div>Zero rischio di perdere capitale (il capitale è 0€), zero analisi di mercato, zero emozioni</div></li>
+          <li><span class="icon">🆚 MLM/Network</span><div>Non devi vendere nulla a nessuno: non serve "talento da venditore", non serve esposizione pubblica</div></li>
+          <li><span class="icon">🆚 Dropshipping/e-com</span><div>Non gestisci clienti, ordini, resi, ADS, fornitori. I soldi arrivano da <em>banche regolamentate</em>, non da sconosciuti</div></li>
+          <li><span class="icon">🆚 Guru classici</span><div>Il profitto è <strong>matematico</strong>, non "potenziale": se segui i passi, il risultato è quasi garantito (è la definizione stessa del metodo)</div></li>
+        </ul>
+      </div>
+    </div>
+
+    <div>
+      <!-- BIG IDEA UNIFICATA -->
+      <div class="s-card s-purple">
+        <h3><span class="dot"></span> Big Idea Unificata (Schema VSL)</h3>
+        <div class="info-box" style="border-left-color:#9b59b6">
+          <strong style="color:#9b59b6">Big Idea = Sorpresa + Fiducia + Metafora 3C.</strong> Deve essere scioccante, al limite dello scam, ma dimostrata.
+        </div>
+        <p style="font-size:.95rem;line-height:1.75;color:#e8e8e8;margin-top:12px">
+          <strong style="color:#f0c040">"La Falla del Bonus"</strong> — <em>In Italia esiste una falla legale nei siti di scommesse AAMS che da 20 anni regala soldi ai giocatori "scafati", e da 5 anni un ex-scommettitore calabrese ha trasformato in un protocollo matematico che funziona anche a chi ha 52 anni, non sa accendere un computer e non ha mai scommesso in vita sua. Non è una truffa, non è gioco d'azzardo, non è trading: è contabilità. I siti di scommesse sanno che questo metodo esiste, ma sono obbligati per legge a consegnarti comunque il bonus — perché è l'unico modo che hanno per attrarre nuovi clienti. Ogni mese, 6.176 italiani come te stanno prendendo da 500 a 3.000 € dei loro soldi. E tu sei convinto che "online è tutta una fregatura". Hai ragione al 99%. Ma c'è quell'1%. E quell'1% è questo."</em>
+        </p>
+      </div>
+
+      <div class="s-card s-red" style="border-color:rgba(155,89,182,.4)">
+        <h3 style="color:#bf8bd4"><span class="dot" style="background:#bf8bd4"></span> Proposte Big Idea alternative</h3>
+        <ul>
+          <li><span class="icon">🧲</span><div><strong>"La Falla del Bonus"</strong> <small style="color:#888">(→ scelta attuale)</small><br><small>Angle: rivelazione di un "buco" nel sistema sfruttabile legalmente</small></div></li>
+          <li><span class="icon">💸</span><div><strong>"Il Terzo Stipendio Invisibile"</strong><br><small>Angle: un reddito parallelo che lo Stato ignora perché è già tassato alla fonte</small></div></li>
+          <li><span class="icon">🏦</span><div><strong>"Il Bancomat dei Bookmaker"</strong><br><small>Angle: metafora Apple "scrivania" — prendi i soldi come se fosse un prelievo, non una scommessa</small></div></li>
+          <li><span class="icon">⚗️</span><div><strong>"Protocollo Enzima"</strong><br><small>Angle: twist alla Stefan Georgi — non "il metabolismo è lento", ma "c'è un enzima specifico che sblocca il metabolismo dei bonus"</small></div></li>
+          <li><span class="icon">🛡️</span><div><strong>"Il Paracadute Fiscale"</strong><br><small>Angle: metafora della rete di sicurezza — 100% legale, 100% anonimo, 100% senza Partita IVA</small></div></li>
+          <li><span class="icon">🔓</span><div><strong>"L'Errore nel Codice"</strong><br><small>Angle: stile hacker-white-hat — il sistema ha un bug, lo sfruttiamo senza infrangere nulla</small></div></li>
+        </ul>
+      </div>
+
+      <div class="s-card s-cyan">
+        <h3><span class="dot"></span> Framework S.U.C.C.E.S.S. (checklist Heath Brothers)</h3>
+        <ul style="font-size:.85rem">
+          <li><span class="icon">🧱</span><div><strong>S — Semplice:</strong> "Incassi i bonus che i siti ti regalano, senza rischiare un euro"</div></li>
+          <li><span class="icon">⚡</span><div><strong>U — Unexpected:</strong> contraddice la credenza "online è una fregatura" mantenendola vera al 99%</div></li>
+          <li><span class="icon">🧲</span><div><strong>C — Concreto:</strong> "6.176 italiani", "da 500 a 3.000 €/mese", "52 anni, pizzaiolo"</div></li>
+          <li><span class="icon">🏛️</span><div><strong>C — Credibile:</strong> AAMS, matematica dimostrabile, testimonianze nominali, garanzia</div></li>
+          <li><span class="icon">💔</span><div><strong>E — Emotivo:</strong> tocca le paure profonde di Salvo (pensione 1.000€, figli, vergogna sociale)</div></li>
+          <li><span class="icon">📖</span><div><strong>S — Storia:</strong> storia di Alessandro (ex-scommettitore) → di Tonino, Antonio, Ciro (avatar)</div></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     PAGE: NAMING
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="page" id="page-naming">
+  <div class="page-header">
+    <h1>Naming — Proposte Multiple</h1>
+    <p>Regole: unico · breve (max 3 parole) · esplicativo · utile · specifico · parole-azione ("guadagna, addio, stop, da zero"). Per ogni slot trovi <strong>5–8 proposte</strong> da scegliere — le tecniche usate sono indicate accanto.</p>
+  </div>
+
+  <div class="info-box info-gold" style="margin-bottom:16px">
+    <strong>Legenda tecniche:</strong> <small>Alfabetiz. · Citazioni cliente · Autorità prestata · Macedonia · Contrarian · Metafora personale · Onomatopea · Allitterazione · Rima · Ripetizione · Acronimo</small>
+  </div>
+
+  <!-- NOMI DECISI RECAP -->
+  <div class="s-card s-green" style="margin-bottom:20px">
+    <h3><span class="dot"></span> Naming già decisi (recap)</h3>
+    <ul>
+      <li><span class="icon">✅</span><div><strong>Brand personale:</strong> Alessandro De Martino</div></li>
+      <li><span class="icon">✅</span><div><strong>Brand progetto:</strong> Revoluzione Matched Betting</div></li>
+      <li><span class="icon">✅</span><div><strong>Modulo aggiuntivo:</strong> Casino Profiteering VIP Course</div></li>
+      <li><span class="icon">✅</span><div><strong>Fasi operative:</strong> Bonus Benvenuto · Profilazione · Multi-account</div></li>
+    </ul>
+  </div>
+
+  <!-- SLOT 1: NOME METODO/SISTEMA -->
+  <div class="s-card s-gold" style="margin-bottom:20px">
+    <h3><span class="dot"></span> 1. Nome del Metodo / Sistema <small style="color:#888;font-weight:400">(protocollo completo che insegna Alessandro)</small></h3>
+    <div class="grid-2" style="margin-top:10px">
+      <ul>
+        <li><span class="icon">🏷️</span><div><strong>Protocollo Bonus</strong> <small style="color:#888">· allitterazione · esplicativo</small></div></li>
+        <li><span class="icon">🏷️</span><div><strong>Metodo Falla</strong> <small style="color:#888">· macedonia · specifico</small></div></li>
+        <li><span class="icon">🏷️</span><div><strong>Sistema Matched</strong> <small style="color:#888">· contrarian · autorità</small></div></li>
+        <li><span class="icon">🏷️</span><div><strong>Zero Rischio Method</strong> <small style="color:#888">· parola-azione + contrarian</small></div></li>
+      </ul>
+      <ul>
+        <li><span class="icon">🏷️</span><div><strong>Bonus Hunter System</strong> <small style="color:#888">· metafora + autorità</small></div></li>
+        <li><span class="icon">🏷️</span><div><strong>Il Protocollo € </strong> <small style="color:#888">· simbolo + onomatopea visiva</small></div></li>
+        <li><span class="icon">🏷️</span><div><strong>Matchbet Protocol</strong> <small style="color:#888">· acronimo + inglese business</small></div></li>
+        <li><span class="icon">🏷️</span><div><strong>Piano Bonus 3F</strong> <small style="color:#888">· 3 Fasi — chiaro, acronimo</small></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SLOT 2: NOME OFFERTA PRINCIPALE -->
+  <div class="s-card s-blue" style="margin-bottom:20px">
+    <h3><span class="dot"></span> 2. Nome dell'Offerta Principale <small style="color:#888;font-weight:400">(pacchetto venduto in VSL)</small></h3>
+    <div class="grid-2" style="margin-top:10px">
+      <ul>
+        <li><span class="icon">📦</span><div><strong>Protocollo Elite</strong> <small style="color:#888">· attuale · autorità</small></div></li>
+        <li><span class="icon">📦</span><div><strong>Accesso Elite</strong> <small style="color:#888">· esclusività</small></div></li>
+        <li><span class="icon">📦</span><div><strong>Bonus Club VIP</strong> <small style="color:#888">· autorità + ripetizione sigle</small></div></li>
+        <li><span class="icon">📦</span><div><strong>Guadagno Garantito</strong> <small style="color:#888">· allitterazione + promessa</small></div></li>
+      </ul>
+      <ul>
+        <li><span class="icon">📦</span><div><strong>Matched Full Pack</strong> <small style="color:#888">· macedonia inglese</small></div></li>
+        <li><span class="icon">📦</span><div><strong>Stipendio-Bonus</strong> <small style="color:#888">· contrarian + concreto</small></div></li>
+        <li><span class="icon">📦</span><div><strong>Piano Guadagno</strong> <small style="color:#888">· parole-azione</small></div></li>
+        <li><span class="icon">📦</span><div><strong>Casino Profit Elite</strong> <small style="color:#888">· continuità col corso esistente</small></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SLOT 3: NOME SOFTWARE -->
+  <div class="s-card s-cyan" style="margin-bottom:20px">
+    <h3><span class="dot"></span> 3. Nome del Software <small style="color:#888;font-weight:400">(attuale: "Guadagno Matematico")</small></h3>
+    <div class="grid-2" style="margin-top:10px">
+      <ul>
+        <li><span class="icon">💻</span><div><strong>Guadagno Matematico</strong> <small style="color:#888">· ATTUALE · allitterazione</small></div></li>
+        <li><span class="icon">💻</span><div><strong>MatematicaBet</strong> <small style="color:#888">· macedonia</small></div></li>
+        <li><span class="icon">💻</span><div><strong>BonusCalc</strong> <small style="color:#888">· onomatopea + concreto</small></div></li>
+        <li><span class="icon">💻</span><div><strong>ZeroRisk</strong> <small style="color:#888">· contrarian + inglese</small></div></li>
+      </ul>
+      <ul>
+        <li><span class="icon">💻</span><div><strong>ProfitLab</strong> <small style="color:#888">· metafora laboratorio</small></div></li>
+        <li><span class="icon">💻</span><div><strong>FormulaBet</strong> <small style="color:#888">· rinforza "matematica"</small></div></li>
+        <li><span class="icon">💻</span><div><strong>Il Cervello €</strong> <small style="color:#888">· metafora personale italiana</small></div></li>
+        <li><span class="icon">💻</span><div><strong>Bookie Hunter</strong> <small style="color:#888">· autorità presa in prestito</small></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SLOT 4: GARANZIA -->
+  <div class="s-card s-purple" style="margin-bottom:20px">
+    <h3><span class="dot"></span> 4. Nome della Garanzia <small style="color:#888;font-weight:400">(attuale: "Garanzia 3 mesi gratis se non funziona")</small></h3>
+    <div class="grid-2" style="margin-top:10px">
+      <ul>
+        <li><span class="icon">🛡️</span><div><strong>Garanzia Risultato</strong> <small style="color:#888">· semplice + forte</small></div></li>
+        <li><span class="icon">🛡️</span><div><strong>Garanzia Bonus O Rimborso</strong> <small style="color:#888">· condizionata</small></div></li>
+        <li><span class="icon">🛡️</span><div><strong>Garanzia €1.000 in 45gg</strong> <small style="color:#888">· numerica · tempo</small></div></li>
+        <li><span class="icon">🛡️</span><div><strong>Garanzia "Zero Euro Persi"</strong> <small style="color:#888">· promessa diretta</small></div></li>
+      </ul>
+      <ul>
+        <li><span class="icon">🛡️</span><div><strong>Garanzia Bancomat</strong> <small style="color:#888">· metafora (nome!)</small></div></li>
+        <li><span class="icon">🛡️</span><div><strong>Garanzia Ferro</strong> <small style="color:#888">· allusione a solidità</small></div></li>
+        <li><span class="icon">🛡️</span><div><strong>Garanzia 3x</strong> <small style="color:#888">· triplo = o funziona o triplicato in tempo</small></div></li>
+        <li><span class="icon">🛡️</span><div><strong>Patto Alessandro</strong> <small style="color:#888">· personalizzata sul brand</small></div></li>
+      </ul>
+    </div>
+    <div class="info-box info-green" style="margin-top:12px">
+      <strong>Regola (da prompt mappa):</strong> "la garanzia è buona solo se i competitor la leggono e pensano: questo è pazzo". Descriverla <em>lungamente</em>, non basta il bollino, darle un <strong>nome</strong>.
+    </div>
+  </div>
+
+  <!-- SLOT 5: BONUS NAMING -->
+  <div class="s-card s-green" style="margin-bottom:20px">
+    <h3><span class="dot"></span> 5. Nomi dei Bonus VSL <small style="color:#888;font-weight:400">(ogni bonus deve avere un nome impattante + valore dichiarato)</small></h3>
+    <div class="grid-2" style="margin-top:10px">
+      <ul>
+        <li><span class="icon">🎁</span><div><strong>Bonus #1 — "Kit Partenza Zero"</strong><br><small style="color:#888">proposte: "Starter Pack", "Primi 500€", "Guida Lampo"</small></div></li>
+        <li><span class="icon">🎁</span><div><strong>Bonus #2 — "Manuale del Pizzaiolo Ricco"</strong><br><small style="color:#888">proposte: "Bibbia Bonus", "Vangelo Matched", "Libro Nero AAMS"</small></div></li>
+        <li><span class="icon">🎁</span><div><strong>Bonus #3 — "Accesso Gruppo Privato"</strong><br><small style="color:#888">proposte: "Inner Circle", "Club Elite", "Community €"</small></div></li>
+      </ul>
+      <ul>
+        <li><span class="icon">🎁</span><div><strong>Bonus #4 — "Coaching 1-1 30 Minuti"</strong><br><small style="color:#888">proposte: "Chiamata Strategica", "Sessione Zero Dubbi", "30 Minuti Alessandro"</small></div></li>
+        <li><span class="icon">🎁</span><div><strong>Bonus #5 — "Masterclass Multi-Account"</strong><br><small style="color:#888">proposte: "Protocollo Scalare", "Livello 2", "Da 500 a 3.000"</small></div></li>
+        <li><span class="icon">🎁</span><div><strong>Bonus #6 — "Software Guadagno Matematico (3 mesi)"</strong><br><small style="color:#888">proposte: "Licenza Pro", "Accesso Calcolatore", "Chiave €"</small></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SLOT 6: HEADLINE VSL -->
+  <div class="s-card s-red" style="margin-bottom:20px;border-color:rgba(224,128,64,.35)">
+    <h3 style="color:#e08040"><span class="dot" style="background:#e08040"></span> 6. Headline VSL <small style="color:#888;font-weight:400">(apertura del video — deve fermare lo scroll in 3 secondi)</small></h3>
+    <ul style="margin-top:10px">
+      <li><span class="icon">📢</span><div><strong>"La falla legale nei siti di scommesse AAMS che da 5 anni sta pagando 6.176 italiani over-40 uno 'stipendio ombra' di 500-3.000 € al mese"</strong></div></li>
+      <li><span class="icon">📢</span><div><strong>"Se hai più di 40 anni, sai usare WhatsApp, e sei stufo di arrivare a fine mese con 200 € in tasca — leggi questa pagina prima che la chiudano"</strong></div></li>
+      <li><span class="icon">📢</span><div><strong>"Come un ex-scommettitore calabrese ha scoperto che i siti di scommesse sono obbligati per legge a regalarti soldi — e ha costruito un protocollo matematico che funziona anche a chi ha 52 anni e non sa accendere un PC"</strong></div></li>
+      <li><span class="icon">📢</span><div><strong>"Non è trading, non è gioco d'azzardo, non è network marketing: è contabilità. E oggi 6.176 italiani stanno incassando in media 1.200 € al mese così"</strong></div></li>
+      <li><span class="icon">📢</span><div><strong>"Il 99% dei modi per 'fare soldi online' sono una fregatura. Hai ragione. Ma c'è quell'1%. E quell'1% è l'unico legalizzato dallo Stato"</strong></div></li>
+    </ul>
+  </div>
+
+  <!-- SLOT 7: CTA -->
+  <div class="s-card s-orange" style="margin-bottom:20px">
+    <h3><span class="dot"></span> 7. Nome / Testo della CTA <small style="color:#888;font-weight:400">(pulsante finale VSL)</small></h3>
+    <div class="grid-2" style="margin-top:10px">
+      <ul>
+        <li><span class="icon">👉</span><div><strong>"Voglio Entrare nel Protocollo"</strong></div></li>
+        <li><span class="icon">👉</span><div><strong>"Prenota la Coaching Gratuita"</strong></div></li>
+        <li><span class="icon">👉</span><div><strong>"Sì, Voglio i Miei 500€"</strong></div></li>
+        <li><span class="icon">👉</span><div><strong>"Inizia Ora — Zero Rischio"</strong></div></li>
+      </ul>
+      <ul>
+        <li><span class="icon">👉</span><div><strong>"Voglio Vedere Come Funziona"</strong></div></li>
+        <li><span class="icon">👉</span><div><strong>"Accedi al Gruppo Privato"</strong></div></li>
+        <li><span class="icon">👉</span><div><strong>"Scopri la Falla"</strong></div></li>
+        <li><span class="icon">👉</span><div><strong>"Sblocca il Protocollo"</strong></div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- SLOT 8: HOOK/TAGLINE BREVI -->
+  <div class="s-card s-cyan" style="margin-bottom:20px">
+    <h3><span class="dot"></span> 8. Hook / Tagline brevi <small style="color:#888;font-weight:400">(bio Instagram, firma email, banner)</small></h3>
+    <ul>
+      <li><span class="icon">💬</span><div>"La falla nel sistema — insegnata in italiano"</div></li>
+      <li><span class="icon">💬</span><div>"Matematica, non scommesse"</div></li>
+      <li><span class="icon">💬</span><div>"Un metodo. Zero rischio. 6.176 italiani lo usano ogni giorno"</div></li>
+      <li><span class="icon">💬</span><div>"Il reddito che lo Stato ignora (perché è già tassato alla fonte)"</div></li>
+      <li><span class="icon">💬</span><div>"Da 500 a 3.000 €/mese dal telefono — senza vendere nulla a nessuno"</div></li>
+      <li><span class="icon">💬</span><div>"Non ti serve talento. Non ti serve capitale. Ti serve un protocollo"</div></li>
+    </ul>
+  </div>
+
+  <div class="info-box" style="border-left-color:#f0c040;margin-top:16px">
+    <strong>⚙️ Come si usa:</strong> entra in modalità <em>Modifica</em> (in alto a destra), tieni i nomi che ti convincono, cancella gli altri, aggiungine di nuovi. Le modifiche vengono salvate in automatico nel browser.
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     PAGE: VISUAL HAMMER
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="page" id="page-visual">
+  <div class="page-header">
+    <h1>Visual Hammer / Logo</h1>
+    <p>Identità visiva, logo e proposta grafica</p>
+  </div>
+
+  <div class="info-box info-gold">
+    <strong>Visual Hammer</strong> = l'elemento visivo che "inchioda" il brand nella mente del cliente. Deve essere semplice, riconoscibile e collegato alla USP.
+  </div>
+
+  <div class="grid-2">
+    <div class="s-card s-gold">
+      <h3><span class="dot"></span> Elementi Visivi Attuali</h3>
+      <ul>
+        <li><span class="icon">🎨</span><div><strong>Colore primario:</strong> Oro/Giallo (#f0c040) — richiama denaro e premium</div></li>
+        <li><span class="icon">🟢</span><div><strong>Colore secondario:</strong> Verde (#40c070) — richiama profitto e sicurezza</div></li>
+        <li><span class="icon">🌑</span><div><strong>Background:</strong> Dark theme — sensazione esclusiva, tech</div></li>
+        <li><span class="icon">📝</span><div><strong>Font:</strong> Segoe UI / System — pulito, moderno</div></li>
+      </ul>
+    </div>
+
+    <div class="s-card s-purple">
+      <h3><span class="dot"></span> Proposte Visual Hammer</h3>
+      <ul>
+        <li><span class="icon">🔓</span><div><strong>Lucchetto che si apre</strong> — "sbloccare" il guadagno, la falla nel sistema</div></li>
+        <li><span class="icon">📐</span><div><strong>Simbolo matematico/formula</strong> — rinforza il concetto di "certezza matematica"</div></li>
+        <li><span class="icon">🛡️</span><div><strong>Scudo con cifra €</strong> — protezione + guadagno garantito</div></li>
+        <li><span class="icon">⚡</span><div><strong>Fulmine in un cerchio</strong> — velocità, semplicità, potenza</div></li>
+      </ul>
+    </div>
+
+    <div class="s-card" style="grid-column: 1/-1">
+      <h3 style="color:#e08020"><span class="dot" style="background:#e08020"></span> Da Fare — Logo</h3>
+      <div class="placeholder">
+        <div class="ph-icon">🎨</div>
+        <div class="ph-title">Logo da creare o migliorare</div>
+        <div class="ph-desc">Generare una proposta di logo che incorpori il visual hammer scelto.<br>Deve funzionare su: sito, social, email, materiali di vendita, VSL.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     PAGE: PRODOTTI (singoli elementi vendibili)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="page" id="page-prodotti">
+  <div class="page-header">
+    <h1>Prodotti</h1>
+    <p>Tutti i singoli elementi vendibili — corsi, software, coaching, consulenze, add-on. Questi vengono poi combinati nei Pacchetti.</p>
+  </div>
+
+  <div class="info-box">
+    <strong>Logica:</strong> Ogni "prodotto" è un elemento singolo che può essere venduto da solo o incluso in un pacchetto. Vedi la scheda <strong>Pacchetti</strong> per come vengono combinati.
+  </div>
+
+  <!-- CORSI -->
+  <h2 style="font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:#555;font-weight:700;margin:24px 0 14px;padding-bottom:8px;border-bottom:1px solid #1a1a25">Corsi & Formazione</h2>
+
+  <div class="grid-2" style="margin-bottom:24px">
+    <div class="prod-card" style="border-color:#4a90d9">
+      <div class="prod-type" style="color:#4a90d9">Corso</div>
+      <div class="prod-name">Videocorso Matched Betting</div>
+      <div class="tag-row" style="margin-top:4px;margin-bottom:12px">
+        <span class="tag tag-blue">CORE</span>
+        <span class="tag tag-green">PRONTO</span>
+      </div>
+      <ul class="prod-features">
+        <li><span class="fi">🎬</span> Corso video completo sul Matched Betting</li>
+        <li><span class="fi">📚</span> Copre tutte e 3 le fasi: Bonus Benvenuto → Profilazione → Multi-account</li>
+        <li><span class="fi">♾️</span> Accesso a vita ai materiali</li>
+        <li><span class="fi">🎯</span> Adatto a chi parte da zero</li>
+      </ul>
+      <p style="font-size:.75rem;color:#555;margin-top:12px;font-style:italic">Presente in: Video Corso (€797), Pacchetto Centrale, Protocollo Elite</p>
+    </div>
+
+    <div class="prod-card" style="border-color:#9b59b6">
+      <div class="prod-type" style="color:#9b59b6">Corso Avanzato</div>
+      <div class="prod-name">Casino Profiteering VIP Course</div>
+      <div class="tag-row" style="margin-top:4px;margin-bottom:12px">
+        <span class="tag tag-purple">ADD-ON / UPSELL</span>
+        <span class="tag tag-green">PRONTO</span>
+      </div>
+      <ul class="prod-features">
+        <li><span class="fi">🎰</span> Corso completo su casino profiteering</li>
+        <li><span class="fi">📈</span> Potenziale aggiuntivo: €3.000–4.000/mese</li>
+        <li><span class="fi">🔓</span> Incluso nel Protocollo Elite oppure vendibile separatamente</li>
+        <li><span class="fi">⚡</span> Per studenti che vogliono scalare oltre il MB classico</li>
+      </ul>
+      <p style="font-size:.75rem;color:#555;margin-top:12px;font-style:italic">Presente in: Protocollo Elite (incluso) · Vendibile come upsell separato (prezzo TBD)</p>
+    </div>
+  </div>
+
+  <!-- SOFTWARE & STRUMENTI -->
+  <h2 style="font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:#555;font-weight:700;margin:24px 0 14px;padding-bottom:8px;border-bottom:1px solid #1a1a25">Software & Strumenti</h2>
+
+  <div class="grid-2" style="margin-bottom:24px">
+    <div class="prod-card" style="border-color:#f0c040">
+      <div class="prod-type" style="color:#f0c040">Software</div>
+      <div class="prod-name">Guadagno Matematico</div>
+      <div class="tag-row" style="margin-top:4px;margin-bottom:12px">
+        <span class="tag tag-gold">PROPRIETARIO</span>
+        <span class="tag tag-green">PRONTO</span>
+      </div>
+      <ul class="prod-features">
+        <li><span class="fi">⚙️</span> Software proprietario per calcoli MB</li>
+        <li><span class="fi">🤖</span> Automatizza i calcoli — elimina errori manuali</li>
+        <li><span class="fi">📊</span> Trova le migliori opportunità di profitto</li>
+        <li><span class="fi">💡</span> Alto valore percepito — è uno dei differenziatori chiave</li>
+      </ul>
+      <p style="font-size:.75rem;color:#555;margin-top:12px;font-style:italic">Presente in: Pacchetto Centrale (€2k e €3k), Protocollo Elite</p>
+    </div>
+
+    <div class="prod-card" style="border-color:#20c0c0">
+      <div class="prod-type" style="color:#20c0c0">Community</div>
+      <div class="prod-name">Community Telegram</div>
+      <div class="tag-row" style="margin-top:4px;margin-bottom:12px">
+        <span class="tag tag-cyan">COMMUNITY</span>
+        <span class="tag tag-green">ATTIVA</span>
+      </div>
+      <ul class="prod-features">
+        <li><span class="fi">📱</span> Gruppo Telegram privato con tutti gli studenti</li>
+        <li><span class="fi">♾️</span> Accesso a vita (anche dopo fine coaching)</li>
+        <li><span class="fi">🤝</span> Supporto peer-to-peer + social proof continua</li>
+        <li><span class="fi">🔔</span> Alert e aggiornamenti dal team</li>
+      </ul>
+      <p style="font-size:.75rem;color:#555;margin-top:12px;font-style:italic">Presente in: tutti i pacchetti</p>
+    </div>
+  </div>
+
+  <!-- COACHING & CONSULENZE -->
+  <h2 style="font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:#555;font-weight:700;margin:24px 0 14px;padding-bottom:8px;border-bottom:1px solid #1a1a25">Coaching & Consulenze</h2>
+
+  <div class="grid-3" style="margin-bottom:24px">
+    <div class="prod-card" style="border-color:#40c070">
+      <div class="prod-type" style="color:#40c070">Coaching</div>
+      <div class="prod-name">Chiamate di Gruppo</div>
+      <div class="tag-row" style="margin-top:4px;margin-bottom:12px">
+        <span class="tag tag-green">CORE</span>
+      </div>
+      <ul class="prod-features">
+        <li><span class="fi">👥</span> Chiamate settimanali di gruppo</li>
+        <li><span class="fi">📅</span> Durata: 3 mesi</li>
+        <li><span class="fi">🎯</span> Seguire il protocollo step-by-step</li>
+        <li><span class="fi">❓</span> Q&A e supporto in diretta</li>
+      </ul>
+      <p style="font-size:.75rem;color:#555;margin-top:12px;font-style:italic">Presente in: Pacchetto Centrale, Protocollo Elite</p>
+    </div>
+
+    <div class="prod-card" style="border-color:#f0c040">
+      <div class="prod-type" style="color:#f0c040">Coaching 1:1</div>
+      <div class="prod-name">Chiamate Private con Coach</div>
+      <div class="tag-row" style="margin-top:4px;margin-bottom:12px">
+        <span class="tag tag-gold">PREMIUM</span>
+      </div>
+      <ul class="prod-features">
+        <li><span class="fi">📞</span> Sessioni 1:1 con un coach esperto</li>
+        <li><span class="fi">🎯</span> Strategia personalizzata</li>
+        <li><span class="fi">📊</span> Review account e performance</li>
+      </ul>
+      <p style="font-size:.75rem;color:#555;margin-top:12px;font-style:italic">1 call nel Tier €2k · 3 call nel Tier €3k · 3 mesi 1:1 nell'Elite</p>
+    </div>
+
+    <div class="prod-card" style="border-color:#e05050">
+      <div class="prod-type" style="color:#e05050">Consulenza Esclusiva</div>
+      <div class="prod-name">Videochiamate con Alessandro</div>
+      <div class="tag-row" style="margin-top:4px;margin-bottom:12px">
+        <span class="tag tag-red">ESCLUSIVO</span>
+      </div>
+      <ul class="prod-features">
+        <li><span class="fi">🔑</span> Sessioni dirette con Alessandro De Martino</li>
+        <li><span class="fi">📈</span> Focus: usare il MB come primo business</li>
+        <li><span class="fi">🏆</span> Accesso diretto al fondatore</li>
+      </ul>
+      <p style="font-size:.75rem;color:#555;margin-top:12px;font-style:italic">2 call nel Tier €3k · 2 call nell'Elite</p>
+    </div>
+  </div>
+
+  <!-- SERVIZI -->
+  <h2 style="font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:#555;font-weight:700;margin:24px 0 14px;padding-bottom:8px;border-bottom:1px solid #1a1a25">Servizi & Supporto</h2>
+
+  <div class="grid-2" style="margin-bottom:24px">
+    <div class="prod-card" style="border-color:#4a90d9">
+      <div class="prod-type" style="color:#4a90d9">Supporto</div>
+      <div class="prod-name">Supporto Chat Costante</div>
+      <div class="tag-row" style="margin-top:4px;margin-bottom:12px">
+        <span class="tag tag-blue">INCLUSO</span>
+      </div>
+      <ul class="prod-features">
+        <li><span class="fi">💬</span> Assistenza via chat durante i 3 mesi di coaching</li>
+        <li><span class="fi">⏱️</span> Risposte rapide dal team</li>
+        <li><span class="fi">🛠️</span> Risoluzione problemi tecnici e strategici</li>
+      </ul>
+      <p style="font-size:.75rem;color:#555;margin-top:12px;font-style:italic">Presente in: Pacchetto Centrale, Protocollo Elite</p>
+    </div>
+
+    <div class="prod-card" style="border-color:#e08020">
+      <div class="prod-type" style="color:#e08020">Lead Generation</div>
+      <div class="prod-name">Coaching Gratuita 30 Min</div>
+      <div class="tag-row" style="margin-top:4px;margin-bottom:12px">
+        <span class="tag tag-orange">FRONT-END</span>
+      </div>
+      <ul class="prod-features">
+        <li><span class="fi">📞</span> Chiamata conoscitiva gratuita di 30 minuti</li>
+        <li><span class="fi">📋</span> Preceduta da questionario pre-call</li>
+        <li><span class="fi">🎯</span> Obiettivo: qualificare e chiudere</li>
+        <li><span class="fi">🔄</span> Ingresso nel funnel di vendita</li>
+      </ul>
+      <p style="font-size:.75rem;color:#555;margin-top:12px;font-style:italic">Non è un prodotto venduto, è il front-end del funnel</p>
+    </div>
+  </div>
+
+  <!-- GARANZIA -->
+  <h2 style="font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:#555;font-weight:700;margin:24px 0 14px;padding-bottom:8px;border-bottom:1px solid #1a1a25">Garanzie (come leva di vendita)</h2>
+
+  <div class="grid-2">
+    <div class="prod-card" style="border-color:#40c070">
+      <div class="prod-type" style="color:#40c070">Garanzia</div>
+      <div class="prod-name">Estensione Coaching Gratuita</div>
+      <ul class="prod-features">
+        <li><span class="fi">🛡️</span> Se non raggiungi i risultati → <strong>altri 3 mesi gratis</strong></li>
+        <li><span class="fi">✅</span> Attiva su Pacchetto Centrale €2k e €3k</li>
+        <li><span class="fi">❌</span> NON attiva su Video Corso e Elite</li>
+      </ul>
+    </div>
+
+    <div class="prod-card" style="border-color:#f0c040">
+      <div class="prod-type" style="color:#f0c040">Garanzia</div>
+      <div class="prod-name">Garanzia €1.000 in 45 Giorni</div>
+      <ul class="prod-features">
+        <li><span class="fi">💰</span> Garantiamo <strong>€1.000 entro 45 giorni</strong></li>
+        <li><span class="fi">✅</span> Attiva su Pacchetto Centrale €2k e €3k</li>
+        <li><span class="fi">📝</span> Requisiti: aver seguito il protocollo</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     PAGE: PACCHETTI (bundle dei prodotti)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="page" id="page-pacchetti-offerta">
+  <div class="page-header">
+    <h1>Pacchetti & Struttura Offerta</h1>
+    <p>I bundle che combinano i prodotti singoli + framework 7-componenti dell'offerta (Hormozi + prompt mappa)</p>
+  </div>
+
+  <div class="info-box">
+    <strong>Logica:</strong> Ogni pacchetto è un bundle di prodotti della scheda "Prodotti". Per prezzi e note venditori, vedi <strong>Pacchetti Interni</strong>.
+  </div>
+
+  <!-- STRUTTURA OFFERTA 7 COMPONENTI -->
+  <div class="s-card s-gold" style="margin-bottom:22px">
+    <h3><span class="dot"></span> Struttura dell'Offerta — 7 Componenti (framework)</h3>
+    <div class="grid-2" style="margin-top:10px">
+      <ul>
+        <li><span class="icon">1️⃣</span><div><strong>Prodotto/Servizio</strong> — Protocollo Elite (corso + software + coaching + community + garanzia)</div></li>
+        <li><span class="icon">2️⃣</span><div><strong>Benefici</strong> — <em>funzionali</em> (500-3.000€/mese), <em>esperienziali</em> (sicurezza, non più "lunedì mattina ansia"), <em>emozionali</em> (orgoglio davanti alla moglie/figli)</div></li>
+        <li><span class="icon">3️⃣</span><div><strong>Prezzo + termini</strong> — €1.497 una tantum oppure 3×€547 (reason-why: "voglio che tu possa iniziare adesso, non tra 6 mesi")</div></li>
+        <li><span class="icon">4️⃣</span><div><strong>Bonus</strong> — 6 bonus che risolvono obiezioni diverse (vedi <a onclick="showPage('bonus')" style="color:#f0c040;cursor:pointer;text-decoration:underline">scheda Bonus</a>)</div></li>
+      </ul>
+      <ul>
+        <li><span class="icon">5️⃣</span><div><strong>Inversione rischio</strong> — Garanzia "Zero Euro Persi": se in 90 giorni non hai incassato almeno €1.000 ti rimborso tutto E ti tieni i bonus</div></li>
+        <li><span class="icon">6️⃣</span><div><strong>Scarsità / Urgenza</strong> — 30 posti/mese (limite reale: capienza coaching 1-1) · prezzo bloccato fino al [DATA]</div></li>
+        <li><span class="icon">7️⃣</span><div><strong>Call to Action</strong> — "Prenota la Coaching Gratuita" (soft, da VSL cold) oppure "Voglio Entrare nel Protocollo" (hard, da VSL warm)</div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- APPROFONDIMENTO PREZZO -->
+  <div class="s-card s-cyan" style="margin-bottom:22px">
+    <h3><span class="dot"></span> Approfondimento Prezzo — come presentarlo in VSL</h3>
+    <ol style="padding-left:20px;line-height:1.8;font-size:.9rem">
+      <li><strong>Prezzo di listino fuori dal funnel:</strong> €2.997 (ancora alta)</li>
+      <li><strong>Vendi i soldi a sconto:</strong> oggi solo €1.497 (sconto 50%)</li>
+      <li><strong>Reason-why dello sconto:</strong> "Voglio riempire il gruppo di gennaio per fare casi studio — in cambio ti chiedo la tua testimonianza"</li>
+      <li><strong>Offerta del momento:</strong> se decidi oggi, aggiungo 2 chiamate 1-1 extra</li>
+      <li><strong>Fai i conti al cliente:</strong> "Stai risparmiando €1.500 · con €4/giorno di 30 giorni rientri del 100%"</li>
+      <li><strong>Dimensionalizza i numeri:</strong> "€1.497 è quello che paghi al commercialista in un anno, è il TV 4K che hai in salotto, è la gomma che hai cambiato 6 mesi fa"</li>
+    </ol>
+  </div>
+
+  <!-- GARANZIA ESTESA -->
+  <div class="s-card s-green" style="margin-bottom:22px">
+    <h3><span class="dot"></span> Garanzia "Zero Euro Persi" — descrizione estesa</h3>
+    <p style="font-size:.92rem;line-height:1.75;color:#e8e8e8">
+      <em>Entra nel Protocollo Elite oggi. Prenditi <strong>90 giorni</strong> per seguire ogni singolo passo. Se al 91° giorno non hai incassato almeno <strong>€1.000 veri</strong> — non "simulati", non "teorici": €1.000 bonificati sul tuo conto corrente — mandami una mail con lo screenshot del tuo estratto conto e <strong>ti restituisco tutto, fino all'ultimo centesimo</strong>. Senza domande, senza clausole, senza farti compilare moduli. E ti tieni il videocorso, il software, i bonus, tutto. È la mia parola, ed è per iscritto. Se non funzionasse, non potrei permettermi di offrirtela — non avrei più un'azienda. So che funziona perché <strong>6.176 italiani prima di te l'hanno usato</strong>. L'unico rischio che corri è di continuare a fare le pizze quando potevi già raddoppiare lo stipendio.</em>
+    </p>
+    <div class="info-box info-green" style="margin-top:12px">
+      <strong>Tipologia:</strong> Garanzia <strong>condizionata + premium</strong> — "se non ti piace ti tieni i bonus". Nome: <em>"Patto Zero Euro Persi"</em> (da validare).
+    </div>
+  </div>
+
+  <div class="grid-3" style="margin-bottom:24px">
+    <!-- DOWNSELL -->
+    <div class="prod-card" style="border-color:#555">
+      <div class="prod-type" style="color:#888">Downsell / Entry Level</div>
+      <div class="prod-name">Video Corso</div>
+      <div class="prod-price" style="color:#888"><sup>€</sup>797</div>
+      <span class="prod-rate">Pagamento unico · No rate</span>
+      <ul class="prod-features">
+        <li><span class="fi">🎬</span> Videocorso completo Matched Betting</li>
+        <li><span class="fi">♾️</span> Accesso a vita ai materiali</li>
+        <li><span class="fi">📱</span> Community Telegram a vita</li>
+        <li style="color:#666"><span class="fi" style="opacity:.3">✗</span> Nessuna garanzia</li>
+        <li style="color:#666"><span class="fi" style="opacity:.3">✗</span> Nessun affiancamento</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag" style="background:rgba(255,255,255,.06);color:#666">DOWNSELL</span>
+      </div>
+    </div>
+
+    <!-- CORE — TIER 1 -->
+    <div class="prod-card" style="border-color:#4a90d9">
+      <div class="prod-type" style="color:#4a90d9">Core — Tier 1</div>
+      <div class="prod-name">Pacchetto Centrale</div>
+      <div class="prod-price" style="color:#4a90d9"><sup>€</sup>2.000</div>
+      <span class="prod-rate">2 rate da €1.100</span>
+      <ul class="prod-features">
+        <li><span class="fi">🎬</span> Videocorso MB</li>
+        <li><span class="fi">📅</span> 3 mesi coaching gruppo</li>
+        <li><span class="fi">💬</span> Supporto chat costante</li>
+        <li><span class="fi">⚙️</span> Software "Guadagno Matematico"</li>
+        <li><span class="fi">📱</span> Community Telegram a vita</li>
+        <li><span class="fi">📞</span> <strong>1 chiamata privata</strong> con coach</li>
+        <li><span class="fi">🛡️</span> <strong>Doppia garanzia</strong></li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag tag-blue">CORE</span>
+        <span class="tag tag-green">GARANZIA ATTIVA</span>
+      </div>
+    </div>
+
+    <!-- CORE — TIER 2 -->
+    <div class="prod-card" style="border-color:#f0c040;border-width:2px;box-shadow:0 0 30px rgba(240,192,64,.1)">
+      <div class="prod-type" style="color:#f0c040">Core — Tier 2</div>
+      <div class="prod-name">Pacchetto Centrale Plus</div>
+      <div class="prod-price" style="color:#f0c040"><sup>€</sup>3.000</div>
+      <span class="prod-rate">2 rate da €1.600</span>
+      <ul class="prod-features">
+        <li><span class="fi">📅</span> Tutto del Tier 1 +</li>
+        <li><span class="fi">📞</span> <strong>3 chiamate private</strong> con coach</li>
+        <li><span class="fi">🔑</span> <strong style="color:#f0c040">2 chiamate con Alessandro</strong></li>
+        <li><span class="fi">📈</span> Focus: MB come primo business</li>
+        <li><span class="fi">🛡️</span> <strong>Doppia garanzia</strong></li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag tag-gold">CORE FEATURED</span>
+        <span class="tag tag-green">GARANZIA ATTIVA</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <!-- UPSELL — ELITE -->
+    <div class="prod-card" style="border-color:#40c070;border-width:2px">
+      <div class="prod-type" style="color:#40c070">Upsell — Top Tier</div>
+      <div class="prod-name">Protocollo Elite</div>
+      <div class="prod-price" style="color:#40c070"><sup>€</sup>5.000</div>
+      <span class="prod-rate">3 rate da €1.800</span>
+      <ul class="prod-features">
+        <li><span class="fi">📅</span> 3 mesi chiamate di gruppo settimanali</li>
+        <li><span class="fi">📞</span> 3 mesi chiamate 1:1 coaching</li>
+        <li><span class="fi">🔑</span> <strong style="color:#40c070">2 videochiamate con Alessandro</strong></li>
+        <li><span class="fi">🎰</span> <strong style="color:#40c070">Casino Profiteering VIP Course</strong></li>
+        <li><span class="fi">⚙️</span> Software "Guadagno Matematico"</li>
+        <li><span class="fi">💬</span> Chat diretta + community Telegram a vita</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag tag-green">UPSELL PREMIUM</span>
+        <span class="tag tag-red">NO GARANZIA</span>
+      </div>
+    </div>
+
+    <!-- ADDON — CASINO SEPARATO -->
+    <div class="prod-card" style="border-color:#9b59b6">
+      <div class="prod-type" style="color:#9b59b6">Add-on Vendibile Separatamente</div>
+      <div class="prod-name">Casino Profiteering (standalone)</div>
+      <div class="prod-price" style="color:#9b59b6">TBD</div>
+      <span class="prod-rate">Vendibile come upsell post-acquisto</span>
+      <ul class="prod-features">
+        <li><span class="fi">🎰</span> Corso casino profiteering completo</li>
+        <li><span class="fi">📈</span> €3.000–4.000/mese aggiuntivi</li>
+        <li><span class="fi">🎯</span> Per chi ha già il Pacchetto Centrale</li>
+        <li><span class="fi">💡</span> Proposto in follow-up o in call di upsell</li>
+      </ul>
+      <div class="tag-row">
+        <span class="tag tag-purple">ADD-ON UPSELL</span>
+        <span class="tag tag-red">NO GARANZIA</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAPPA VISUALE -->
+  <div class="s-card s-gold" style="margin-top:24px">
+    <h3><span class="dot"></span> Mappa Pacchetti → Prodotti Inclusi</h3>
+    <div style="overflow-x:auto">
+      <table style="width:100%;font-size:.78rem;color:#ccc;border-collapse:collapse;margin-top:10px">
+        <thead>
+          <tr style="border-bottom:1px solid #2a2a35;text-align:left">
+            <th style="padding:8px 12px;color:#888;font-size:.65rem;letter-spacing:.1em;text-transform:uppercase">Prodotto</th>
+            <th style="padding:8px 12px;color:#888;text-align:center">Video Corso<br><span style="color:#555">€797</span></th>
+            <th style="padding:8px 12px;color:#4a90d9;text-align:center">Centrale<br><span style="color:#555">€2.000</span></th>
+            <th style="padding:8px 12px;color:#f0c040;text-align:center">Centrale Plus<br><span style="color:#555">€3.000</span></th>
+            <th style="padding:8px 12px;color:#40c070;text-align:center">Elite<br><span style="color:#555">€5.000</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:8px 12px">Videocorso MB</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:8px 12px">Community Telegram</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:8px 12px">Software Guadagno Matematico</td><td style="text-align:center;color:#555">—</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:8px 12px">Coaching Gruppo (3 mesi)</td><td style="text-align:center;color:#555">—</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:8px 12px">Supporto Chat</td><td style="text-align:center;color:#555">—</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td><td style="text-align:center">✅</td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:8px 12px">Chiamate Private Coach</td><td style="text-align:center;color:#555">—</td><td style="text-align:center">1</td><td style="text-align:center;color:#f0c040;font-weight:700">3</td><td style="text-align:center;color:#40c070;font-weight:700">3 mesi 1:1</td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:8px 12px">Chiamate con Alessandro</td><td style="text-align:center;color:#555">—</td><td style="text-align:center;color:#555">—</td><td style="text-align:center;color:#f0c040;font-weight:700">2</td><td style="text-align:center;color:#40c070;font-weight:700">2</td></tr>
+          <tr style="border-bottom:1px solid rgba(255,255,255,.04)"><td style="padding:8px 12px">Casino Profiteering Course</td><td style="text-align:center;color:#555">—</td><td style="text-align:center;color:#555">—</td><td style="text-align:center;color:#555">—</td><td style="text-align:center;color:#40c070;font-weight:700">✅</td></tr>
+          <tr><td style="padding:8px 12px;font-weight:700">Garanzia Risultati</td><td style="text-align:center;color:#e05050">❌</td><td style="text-align:center;color:#40c070;font-weight:700">✅</td><td style="text-align:center;color:#40c070;font-weight:700">✅</td><td style="text-align:center;color:#e05050">❌</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     PAGE: BONUS & MATERIALI
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="page" id="page-bonus">
+  <div class="page-header">
+    <h1>Bonus & Materiali</h1>
+    <p>Materiali esistenti trasformabili in bonus + bonus da creare per la VSL</p>
+  </div>
+
+  <div class="info-box info-gold">
+    <strong>Obiettivo:</strong> Capire cosa possiamo "promettere in VSL" come bonus aggiuntivi — materiali già pronti da impacchettare + idee nuove da creare.
+  </div>
+
+  <div class="grid-2">
+    <div class="s-card s-green">
+      <h3><span class="dot"></span> Materiali Esistenti (da trasformare in bonus)</h3>
+      <ul>
+        <li><span class="icon">📹</span><div><strong>Videocorso completo MB</strong> — già registrato, può diventare "Corso Accelerato" come bonus</div></li>
+        <li><span class="icon">⚙️</span><div><strong>Software "Guadagno Matematico"</strong> — già sviluppato, ha valore percepito alto</div></li>
+        <li><span class="icon">📱</span><div><strong>Community Telegram</strong> — accesso a vita, social proof continua</div></li>
+        <li><span class="icon">📞</span><div><strong>Chiamate 1:1</strong> — possono essere "impacchettate" come bonus limited</div></li>
+        <li><span class="icon">📋</span><div><strong>Questionario pre-call</strong> — può diventare "Assessment Personalizzato Gratuito"</div></li>
+      </ul>
+    </div>
+
+    <div class="s-card s-gold">
+      <h3><span class="dot"></span> Bonus da Creare (proposte)</h3>
+      <ul>
+        <li><span class="icon">📖</span><div><strong>Guida PDF "I Primi €1.000"</strong> — step-by-step per i primi 45 giorni</div></li>
+        <li><span class="icon">📊</span><div><strong>Template Foglio di Calcolo</strong> — tracker profitti personale</div></li>
+        <li><span class="icon">🎥</span><div><strong>Video "Errori Fatali"</strong> — i 7 errori che bloccano i principianti</div></li>
+        <li><span class="icon">📞</span><div><strong>Sessione Strategica Bonus</strong> — una chiamata extra con Alessandro</div></li>
+        <li><span class="icon">📚</span><div><strong>Modulo "Mindset del Profitto"</strong> — psicologia dietro il metodo</div></li>
+        <li><span class="icon">🔔</span><div><strong>Alert Bonus Esclusivi</strong> — notifiche sui migliori bonus del giorno</div></li>
+        <li><span class="icon">📱</span><div><strong>Accesso Beta a Nuovi Strumenti</strong> — early access a tools futuri</div></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="s-card s-blue">
+    <h3><span class="dot"></span> Strategia Bonus per VSL</h3>
+    <div class="info-box">
+      <strong>Principio:</strong> Ogni bonus deve avere un <strong>valore percepito chiaro</strong> (es. "Valore: €497") e risolvere un'obiezione specifica o accelerare un risultato.
+    </div>
+    <div class="placeholder">
+      <div class="ph-icon">🎁</div>
+      <div class="ph-title">Stack di Bonus — Da Definire</div>
+      <div class="ph-desc">Lo stack finale dei bonus verrà deciso in base alla VSL e all'offerta scelta.<br>Idealmente 3-5 bonus con valore percepito totale superiore al prezzo del prodotto.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     PAGE: PACCHETTI INTERNI (VENDITORI)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="page" id="page-pacchetti">
+  <div class="page-header">
+    <h1>Pacchetti Interni</h1>
+    <p>Listino e note per il team venditori — NON condividere con il cliente</p>
+  </div>
+
+  <div class="info-box info-red">
+    <strong>🔒 USO INTERNO VENDITORI</strong> — Queste informazioni sono riservate al team. Non condividere con i clienti.
   </div>
 
   <!-- REGOLA D'ORO -->
-  <div class="selection-guide">
-    <h3>🎯 Regola d'oro</h3>
-    <p class="guide-intro">L'obiettivo è <strong>spillare più soldi</strong>, dunque <strong>non esiste un tetto massimo</strong>. Spennate i polli.</p>
+  <div class="s-card s-gold">
+    <h3><span class="dot"></span> Regola d'Oro</h3>
+    <p style="font-size:.95rem;color:#f0c040;font-weight:700">L'obiettivo è spillare più soldi, dunque non esiste un tetto massimo. Spennate i polli.</p>
   </div>
 
-  <div class="pkg-grid pkg-grid-3">
-
-    <!-- VIDEO CORSO -->
-    <div class="pkg-card pkg-ds">
-      <div class="pkg-label">Entry Level</div>
-      <div class="pkg-name">Video Corso</div>
-      <div class="pkg-price">
-        <sup>€</sup>797
-        <span class="rate">pagamento unico · no rate</span>
-      </div>
-
-      <div class="pkg-section-title">Cosa include</div>
-      <ul class="pkg-features">
-        <li><span class="fi">🎬</span> Videocorso completo sul Matched Betting</li>
-        <li><span class="fi">♾️</span> Accesso a vita ai materiali</li>
-        <li><span class="fi">📱</span> Community Telegram a vita</li>
-      </ul>
-
-      <div class="pkg-section-title pkg-section-dim">Cosa NON include</div>
-      <ul class="pkg-features">
-        <li class="dim"><span class="fi">✗</span> Nessuna garanzia</li>
-        <li class="dim"><span class="fi">✗</span> Nessun affiancamento</li>
-      </ul>
-    </div>
-
-    <!-- PACCHETTO CENTRALE (FEATURED) -->
-    <div class="pkg-card pkg-std" style="border-width:2px;box-shadow:0 0 40px rgba(240,192,64,.15)">
-      <div class="hero-badge" style="background:#f0c040">★ Featured</div>
-      <div class="pkg-label" style="margin-top:8px">Core</div>
-      <div class="pkg-name">Pacchetto Centrale</div>
-
-      <div class="pkg-section-title">Cosa include (base per entrambi i tier)</div>
-      <ul class="pkg-features">
-        <li><span class="fi">📅</span> 3 mesi di coaching strutturato</li>
-        <li><span class="fi">👥</span> Chiamate di gruppo settimanali</li>
-        <li><span class="fi">💬</span> Supporto chat costante</li>
-        <li><span class="fi">⚙️</span> Software <strong>"Guadagno Matematico"</strong></li>
-        <li><span class="fi">📱</span> Community Telegram a vita (dopo il 3° mese)</li>
-      </ul>
-
-      <div class="pkg-tier-box">
-        <div class="pkg-tier-row">
-          <div class="pkg-tier-price"><sup>€</sup>2.000</div>
-          <div class="pkg-tier-details">
-            <div class="pkg-tier-rate">2 rate da €1.100</div>
-            <div class="pkg-tier-extra">+ <strong>1 chiamata privata</strong> con coach</div>
-          </div>
-        </div>
-        <div class="pkg-tier-divider"></div>
-        <div class="pkg-tier-row pkg-tier-row-top">
-          <div class="pkg-tier-price pkg-tier-price-top"><sup>€</sup>3.000</div>
-          <div class="pkg-tier-details">
-            <div class="pkg-tier-rate">2 rate da €1.600</div>
-            <div class="pkg-tier-extra">+ <strong>3 chiamate private</strong> con coach</div>
-            <div class="pkg-tier-extra">+ <strong>2 chiamate con Alessandro</strong> (MB come primo business)</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="pkg-guarantee">
-        <span class="g-icon">🛡️</span>
-        <span><strong>Doppia garanzia:</strong> se non raggiungi i risultati, <strong>ti seguiamo altri 3 mesi gratis</strong>. Inoltre garantiamo <strong>€1.000 entro 45 giorni</strong>.</span>
-      </div>
-    </div>
-
-    <!-- PROTOCOLLO ELITE -->
-    <div class="pkg-card pkg-premium">
-      <div class="hero-badge">⚡ Premium</div>
-      <div class="pkg-label" style="margin-top:8px">Top Tier</div>
-      <div class="pkg-name">Protocollo Elite</div>
-      <div class="pkg-price">
-        <sup>€</sup>5.000
-        <span class="rate">3 rate da €1.800</span>
-      </div>
-
-      <div class="pkg-section-title">Coaching</div>
-      <ul class="pkg-features">
-        <li><span class="fi">📅</span> 3 mesi di chiamate di gruppo settimanali</li>
-        <li><span class="fi">📞</span> 3 mesi di chiamate 1:1 di coaching</li>
-        <li><span class="fi">🔑</span> <strong style="color:#40c070">2 videochiamate esclusive con Alessandro</strong></li>
-      </ul>
-
-      <div class="pkg-section-title">Moduli & strumenti</div>
-      <ul class="pkg-features">
-        <li><span class="fi">🎰</span> <strong style="color:#40c070">Casino Profiteering VIP Course</strong><br><span style="color:#888;font-size:.72rem">fino a €3.000–4.000/mese in più</span></li>
-        <li><span class="fi">⚙️</span> Software <strong>"Guadagno Matematico"</strong></li>
-        <li><span class="fi">💬</span> Chat diretta + community Telegram a vita</li>
-      </ul>
-    </div>
-
-  </div>
-
-  <!-- CONDIZIONI GARANZIA -->
-  <div class="guarantee-conditions">
-    <h3>📌 Condizioni garanzia — da tenere a mente in call</h3>
-    <div class="guar-grid">
-      <div class="guar-block guar-yes">
-        <h4>✅ Garanzia ATTIVA su</h4>
-        <ul>
-          <li>Pacchetto Centrale <strong>€2.000</strong></li>
-          <li>Pacchetto Centrale <strong>€3.000</strong></li>
+  <!-- GARANZIA -->
+  <div class="s-card s-purple" style="margin-top:4px">
+    <h3><span class="dot"></span> Condizioni Garanzia</h3>
+    <div class="grid-2" style="gap:12px">
+      <div style="background:rgba(64,192,112,.05);border:1px solid rgba(64,192,112,.2);border-radius:10px;padding:14px 16px">
+        <div style="font-size:.72rem;color:#40c070;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Garanzia ATTIVA su</div>
+        <ul style="font-size:.82rem;color:#ccc">
+          <li style="padding:4px 0;border:none"><span class="icon">✅</span> Pacchetto Centrale €2.000</li>
+          <li style="padding:4px 0;border:none"><span class="icon">✅</span> Pacchetto Centrale €3.000</li>
         </ul>
       </div>
-      <div class="guar-block guar-no">
-        <h4>❌ Garanzia NON attiva su</h4>
-        <ul>
-          <li>Video Corso €797</li>
-          <li>Protocollo Elite €5.000</li>
-          <li>Modulo Casinò</li>
+      <div style="background:rgba(224,80,80,.05);border:1px solid rgba(224,80,80,.2);border-radius:10px;padding:14px 16px">
+        <div style="font-size:.72rem;color:#e05050;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Garanzia NON attiva su</div>
+        <ul style="font-size:.82rem;color:#ccc">
+          <li style="padding:4px 0;border:none"><span class="icon">❌</span> Video Corso €797</li>
+          <li style="padding:4px 0;border:none"><span class="icon">❌</span> Protocollo Elite €5.000</li>
+          <li style="padding:4px 0;border:none"><span class="icon">❌</span> Modulo Casinò</li>
         </ul>
       </div>
-      <div class="guar-block guar-req">
-        <h4>📝 Requisiti del cliente per attivare</h4>
-        <ul>
-          <li>Aver partecipato alle chiamate</li>
-          <li>Aver eseguito le operazioni</li>
-          <li>Aver utilizzato il software</li>
-          <li>Aver seguito tempistiche e istruzioni</li>
-        </ul>
-      </div>
-      <div class="guar-block guar-benefit">
-        <h4>🎯 Cosa garantiamo</h4>
-        <p>Avanzamento al tier successivo <strong>senza costi aggiuntivi</strong> fino al raggiungimento del target del pacchetto.</p>
-      </div>
+    </div>
+    <div style="margin-top:14px;background:rgba(240,192,64,.05);border:1px solid rgba(240,192,64,.2);border-radius:10px;padding:14px 16px">
+      <div style="font-size:.72rem;color:#f0c040;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Requisiti per attivare</div>
+      <ul style="font-size:.82rem;color:#ccc">
+        <li style="padding:3px 0;border:none">Aver partecipato alle chiamate</li>
+        <li style="padding:3px 0;border:none">Aver eseguito le operazioni</li>
+        <li style="padding:3px 0;border:none">Aver utilizzato il software</li>
+        <li style="padding:3px 0;border:none">Aver seguito tempistiche e istruzioni</li>
+      </ul>
+    </div>
+    <div style="margin-top:14px;background:rgba(155,89,182,.06);border:1px solid rgba(155,89,182,.2);border-radius:10px;padding:14px 16px">
+      <div style="font-size:.72rem;color:#c89ee0;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin-bottom:8px">Cosa garantiamo</div>
+      <p style="font-size:.82rem;color:#ccc;line-height:1.5">Avanzamento al tier successivo <strong style="color:#d4aaee">senza costi aggiuntivi</strong> fino al raggiungimento del target del pacchetto.</p>
     </div>
   </div>
-
 </div>
 
-<script>
-// ── SELECTORS: which elements become editable ──────────
-const EDITABLE_SEL = [
-  'h1.page-title',
-  '.center-node .brand',
-  '.center-node .name',
-  '.center-node .tag',
-  '.card-title',
-  '.item > div',
-  '.phase-name',
-  '.phase-desc',
-  '.phase-result',
-  '.result-item .who',
-  '.result-item .amt',
-  '.result-item .detail',
-  '.pkg-label',
-  '.pkg-name',
-  '.pkg-price',
-  '.pkg-tag',
-  '.pkg-features li',
-  '.pkg-backend-note',
-  '.pkg-contract',
-  '.hero-badge',
-  '.section-divider span'
-].join(',');
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     PAGE: TESTIMONIANZE
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="page" id="page-testimonianze">
+  <div class="page-header">
+    <h1>Testimonianze</h1>
+    <p>Tutte le testimonianze raccolte con link alle fonti originali</p>
+  </div>
 
-// ── ADDABLE containers: where "Aggiungi riga" button appears ──
-const ADDABLE = [
-  { parent: '.card', children: '.item', tag: 'div', cls: 'item',
-    template: () => `<span class="icon">✅</span><div contenteditable="true" data-ek>Nuovo elemento</div>` },
-  { parent: '.pkg-features', children: 'li', tag: 'li', cls: '',
-    template: () => `<span class="fi">✅</span> <span contenteditable="true" data-ek>Nuovo elemento</span>` },
-];
+  <div class="info-box info-green">
+    <strong>Aggiorna questa sezione</strong> ogni volta che raccogli una nuova testimonianza. Inserisci sempre il link alla fonte originale (screenshot, video YouTube, Google Drive, sales page).
+  </div>
 
-let editMode = false;
-const STORE_KEY = 'mappa_edits_v20';
+  <div class="grid-2">
+    <div class="testi-card">
+      <div class="testi-header">
+        <div class="testi-avatar">👤</div>
+        <div><div class="testi-name">Michael</div><div class="testi-detail">1 account base</div></div>
+      </div>
+      <div class="testi-result" style="color:#40c070">€621/mese</div>
+      <div class="testi-links">
+        <span class="testi-link">📄 Da aggiungere link fonte</span>
+      </div>
+    </div>
 
-// ── INIT: assign data-ek keys to all editable elements ──
-function init() {
-  document.querySelectorAll(EDITABLE_SEL).forEach((el, i) => {
-    // skip toolbar children
-    if (el.closest('.toolbar')) return;
-    el.setAttribute('data-ek', `ek-${i}`);
-    el.setAttribute('contenteditable', 'false');
-  });
-  loadSaved();
-}
+    <div class="testi-card">
+      <div class="testi-header">
+        <div class="testi-avatar">👤</div>
+        <div><div class="testi-name">Andrea</div><div class="testi-detail">2 account base</div></div>
+      </div>
+      <div class="testi-result" style="color:#40c070">€821/mese</div>
+      <div class="testi-links">
+        <span class="testi-link">📄 Da aggiungere link fonte</span>
+      </div>
+    </div>
 
-// ── TOGGLE EDIT MODE ──────────────────────────────────
-function toggleEdit() {
-  editMode = !editMode;
-  document.body.classList.toggle('edit-mode', editMode);
-  const btn = document.getElementById('btnEdit');
-  btn.classList.toggle('active', editMode);
-  btn.textContent = editMode ? '✏️ Modifica ON' : '✏️ Modifica';
+    <div class="testi-card">
+      <div class="testi-header">
+        <div class="testi-avatar">👤</div>
+        <div><div class="testi-name">Giovanna</div><div class="testi-detail">1 account base · in 2 mesi</div></div>
+      </div>
+      <div class="testi-result" style="color:#40c070">€1.412</div>
+      <div class="testi-links">
+        <span class="testi-link">📄 Da aggiungere link fonte</span>
+      </div>
+    </div>
 
-  document.querySelectorAll('[data-ek]').forEach(el => {
-    if (el.closest('.toolbar')) return;
-    el.setAttribute('contenteditable', editMode ? 'true' : 'false');
-  });
+    <div class="testi-card">
+      <div class="testi-header">
+        <div class="testi-avatar">⭐</div>
+        <div><div class="testi-name">Stefano</div><div class="testi-detail">1 account VIP</div></div>
+      </div>
+      <div class="testi-result" style="color:#f0c040">€1.196/mese</div>
+      <div class="testi-links">
+        <span class="testi-link">📄 Da aggiungere link fonte</span>
+      </div>
+    </div>
 
-  // Add/remove delete buttons on rows
-  if (editMode) {
-    addDeleteButtons();
-    addAddButtons();
-  } else {
-    document.querySelectorAll('.del-btn').forEach(b => b.remove());
-    document.querySelectorAll('.btn-add-item').forEach(b => b.remove());
+    <div class="testi-card">
+      <div class="testi-header">
+        <div class="testi-avatar">⭐</div>
+        <div><div class="testi-name">Marco</div><div class="testi-detail">3 account VIP</div></div>
+      </div>
+      <div class="testi-result" style="color:#f0c040">€2.841/mese</div>
+      <div class="testi-links">
+        <span class="testi-link">📄 Da aggiungere link fonte</span>
+      </div>
+    </div>
+
+    <div class="testi-card">
+      <div class="testi-header">
+        <div class="testi-avatar">⭐</div>
+        <div><div class="testi-name">Leonardo</div><div class="testi-detail">2 account VIP</div></div>
+      </div>
+      <div class="testi-result" style="color:#f0c040">€1.836/mese</div>
+      <div class="testi-links">
+        <span class="testi-link">📄 Da aggiungere link fonte</span>
+      </div>
+    </div>
+
+    <div class="testi-card">
+      <div class="testi-header">
+        <div class="testi-avatar" style="background:rgba(74,144,217,.15)">🏆</div>
+        <div><div class="testi-name">Matteo (coach)</div><div class="testi-detail">4 account</div></div>
+      </div>
+      <div class="testi-result" style="color:#4a90d9">€3.429/mese</div>
+      <div class="testi-links">
+        <span class="testi-link">📄 Da aggiungere link fonte</span>
+      </div>
+    </div>
+
+    <div class="testi-card">
+      <div class="testi-header">
+        <div class="testi-avatar" style="background:rgba(74,144,217,.15)">🏆</div>
+        <div><div class="testi-name">Enrico (coach)</div><div class="testi-detail">3 VIP + 1 base</div></div>
+      </div>
+      <div class="testi-result" style="color:#4a90d9">€3.474/mese</div>
+      <div class="testi-links">
+        <span class="testi-link">📄 Da aggiungere link fonte</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="placeholder" style="margin-top:20px">
+    <div class="ph-icon">📸</div>
+    <div class="ph-title">Aggiungi altre testimonianze</div>
+    <div class="ph-desc">Per ogni testimonianza inserisci: nome, risultato, dettaglio account, e soprattutto il <strong style="color:#888">link alla fonte</strong> (screenshot, video YT, Google Drive, sales page).</div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     PAGE: AUTORITÀ
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="page" id="page-autorita">
+  <div class="page-header">
+    <h1>Autorità</h1>
+    <p>Elementi di autorità esistenti + proposte per costruirne di nuovi</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="s-card s-orange">
+      <h3><span class="dot"></span> Autorità Esistente</h3>
+      <ul>
+        <li><span class="icon">📅</span><div><strong>7 anni nel settore</strong> (dal 2019)</div></li>
+        <li><span class="icon">💰</span><div><strong>€95.000 netti in 12 mesi</strong> — risultato personale documentato</div></li>
+        <li><span class="icon">📈</span><div>Record: <strong>€18.000 in un singolo mese</strong></div></li>
+        <li><span class="icon">👨‍👩‍👧</span><div><strong>1.118 studenti italiani</strong> formati</div></li>
+        <li><span class="icon">🏆</span><div>Team di <strong>coach interni esperti</strong> (Matteo, Enrico)</div></li>
+        <li><span class="icon">⚙️</span><div><strong>Software proprietario</strong> "Guadagno Matematico"</div></li>
+      </ul>
+    </div>
+
+    <div class="s-card s-blue">
+      <h3><span class="dot"></span> Proposte per Aumentare Autorità</h3>
+      <ul>
+        <li><span class="icon">📰</span><div><strong>Articoli PR / Rassegna stampa</strong> — pubblicare su testate online (Startup Italia, Forbes Italia, ecc.)</div></li>
+        <li><span class="icon">🎙️</span><div><strong>Podcast/Interviste</strong> — andare ospite su podcast di finanza personale</div></li>
+        <li><span class="icon">📺</span><div><strong>Canale YouTube strutturato</strong> — video educativi che costruiscono autorità nel tempo</div></li>
+        <li><span class="icon">📖</span><div><strong>eBook/Libro</strong> — anche breve, posiziona come esperto</div></li>
+        <li><span class="icon">🏅</span><div><strong>Certificazioni/Partnership</strong> — collaborazioni con piattaforme riconosciute</div></li>
+        <li><span class="icon">📊</span><div><strong>Case study dettagliati</strong> — risultati studenti con numeri verificabili</div></li>
+        <li><span class="icon">🎤</span><div><strong>Speaking / Eventi live</strong> — webinar gratuiti o eventi dal vivo</div></li>
+        <li><span class="icon">📱</span><div><strong>"Come visto su..."</strong> — badge con loghi di dove è apparso</div></li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     PAGE: FUNNEL
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="page" id="page-funnel">
+  <div class="page-header">
+    <h1>Funnel</h1>
+    <p>Percorsi di funnel previsti — dalla prima impression alla vendita</p>
+  </div>
+
+  <div class="grid-2">
+    <!-- FUNNEL 1: VSL -->
+    <div class="s-card s-gold">
+      <h3><span class="dot"></span> Funnel 1 — VSL (Principale)</h3>
+      <div class="funnel-step">
+        <div class="funnel-num" style="background:#f0c040;color:#000">1</div>
+        <div class="funnel-body">
+          <div class="funnel-name">Ad (Facebook/Instagram/YouTube)</div>
+          <div class="funnel-desc">Creatività che cattura attenzione con hook "La Falla nel Sistema"</div>
+        </div>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step">
+        <div class="funnel-num" style="background:#f0c040;color:#000">2</div>
+        <div class="funnel-body">
+          <div class="funnel-name">Landing Page + VSL</div>
+          <div class="funnel-desc">Video Sales Letter che presenta metodo, risultati, offerta</div>
+        </div>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step">
+        <div class="funnel-num" style="background:#f0c040;color:#000">3</div>
+        <div class="funnel-body">
+          <div class="funnel-name">Prenotazione Call</div>
+          <div class="funnel-desc">Questionario + booking coaching gratuita 30 min</div>
+        </div>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step">
+        <div class="funnel-num" style="background:#f0c040;color:#000">4</div>
+        <div class="funnel-body">
+          <div class="funnel-name">Sales Call</div>
+          <div class="funnel-desc">Chiusura telefonica — proposta pacchetto adatto</div>
+        </div>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step">
+        <div class="funnel-num" style="background:#40c070;color:#000">5</div>
+        <div class="funnel-body">
+          <div class="funnel-name">Onboarding + Upsell</div>
+          <div class="funnel-desc">Inserimento nel programma + proposta Elite/Casino in follow-up</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FUNNEL 2: ORGANICO -->
+    <div class="s-card s-blue">
+      <h3><span class="dot"></span> Funnel 2 — Organico (Supporto)</h3>
+      <div class="funnel-step">
+        <div class="funnel-num" style="background:#4a90d9;color:#fff">1</div>
+        <div class="funnel-body">
+          <div class="funnel-name">Contenuti Social (IG/TikTok/YT)</div>
+          <div class="funnel-desc">Reel, storie, video educativi che costruiscono fiducia</div>
+        </div>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step">
+        <div class="funnel-num" style="background:#4a90d9;color:#fff">2</div>
+        <div class="funnel-body">
+          <div class="funnel-name">Link in Bio → Landing/VSL</div>
+          <div class="funnel-desc">Redirect al funnel principale o a mini-funnel dedicato</div>
+        </div>
+      </div>
+      <div class="funnel-arrow">↓</div>
+      <div class="funnel-step">
+        <div class="funnel-num" style="background:#4a90d9;color:#fff">3</div>
+        <div class="funnel-body">
+          <div class="funnel-name">DM / Community / Prenotazione</div>
+          <div class="funnel-desc">Conversazione diretta o invio al booking call</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="placeholder">
+    <div class="ph-icon">🔄</div>
+    <div class="ph-title">Altri Funnel da Strutturare</div>
+    <div class="ph-desc">Es. funnel email, funnel webinar, funnel retargeting, funnel referral studenti.<br>Da definire in base alla strategia complessiva.</div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     PAGE: ORGANICO
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="page" id="page-organico">
+  <div class="page-header">
+    <h1>Organico</h1>
+    <p>Bio profili social, strategia contenuti, presenza organica</p>
+  </div>
+
+  <div class="grid-2">
+    <div class="s-card s-cyan">
+      <h3><span class="dot"></span> Bio da Creare</h3>
+      <ul>
+        <li><span class="icon">📸</span><div><strong>Instagram:</strong> bio + highlights + link in bio</div></li>
+        <li><span class="icon">🎵</span><div><strong>TikTok:</strong> bio + link</div></li>
+        <li><span class="icon">📺</span><div><strong>YouTube:</strong> about + banner + link</div></li>
+        <li><span class="icon">👤</span><div><strong>Facebook:</strong> pagina / profilo personale</div></li>
+        <li><span class="icon">💼</span><div><strong>LinkedIn:</strong> profilo professionale (opzionale)</div></li>
+      </ul>
+    </div>
+
+    <div class="s-card s-gold">
+      <h3><span class="dot"></span> Elementi Bio Consigliati</h3>
+      <ul>
+        <li><span class="icon">🎯</span><div><strong>Hook chiaro:</strong> cosa fai in una riga (es. "Ti insegno a guadagnare €1.000+/mese da casa con la matematica")</div></li>
+        <li><span class="icon">📊</span><div><strong>Social proof:</strong> "+1.118 studenti" o "€95k in 12 mesi"</div></li>
+        <li><span class="icon">🔽</span><div><strong>CTA:</strong> "Scopri come ↓" + link al funnel</div></li>
+        <li><span class="icon">🏷️</span><div><strong>Emoji strategiche:</strong> usare 💰📈🔒 per comunicare velocemente</div></li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="s-card s-blue">
+    <h3><span class="dot"></span> Strategia Contenuti Organici</h3>
+    <div class="placeholder">
+      <div class="ph-icon">📱</div>
+      <div class="ph-title">Piano Contenuti — Da Strutturare</div>
+      <div class="ph-desc">Tipologie di contenuto: educativi (come funziona il MB), risultati (screenshot profitti), lifestyle (lavorare da casa), obiezioni (risposte ai dubbi), testimonianze (storie studenti).<br>Definire frequenza, formati e calendario editoriale.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     PAGE: COMPETITOR
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+<div class="page" id="page-competitor">
+  <div class="page-header">
+    <h1>Competitor</h1>
+    <p>Analisi dei competitor principali + i loro funnel — sezione chiave per Giusi</p>
+  </div>
+
+  <div class="info-box info-red">
+    <strong>Sezione prioritaria.</strong> Questa è la parte più importante per Giusi. Fare ricerca approfondita sui competitor più forti e mappare i loro funnel completi.
+  </div>
+
+  <div class="s-card s-red">
+    <h3><span class="dot"></span> Cosa Analizzare per Ogni Competitor</h3>
+    <div class="grid-2" style="gap:12px">
+      <ul>
+        <li><span class="icon">🔍</span><div><strong>Chi sono</strong> — nome, brand, canali</div></li>
+        <li><span class="icon">📦</span><div><strong>Cosa vendono</strong> — prodotti, prezzi, posizionamento</div></li>
+        <li><span class="icon">🎯</span><div><strong>USP</strong> — come si differenziano</div></li>
+        <li><span class="icon">📣</span><div><strong>Ads</strong> — creatività, copy, piattaforme</div></li>
+      </ul>
+      <ul>
+        <li><span class="icon">🔄</span><div><strong>Funnel completo</strong> — ogni step dal click alla vendita</div></li>
+        <li><span class="icon">📊</span><div><strong>Traffico/Reach</strong> — follower, views, engagement</div></li>
+        <li><span class="icon">⭐</span><div><strong>Social proof</strong> — testimonianze, numeri</div></li>
+        <li><span class="icon">💡</span><div><strong>Punti deboli</strong> — dove possiamo batterlii</div></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- PLACEHOLDER COMPETITOR -->
+  <div class="comp-card" style="border-color:#333">
+    <div class="comp-header">
+      <span style="font-size:1.4rem">🔍</span>
+      <div>
+        <div class="comp-name" style="color:#666">Competitor 1 — Da Inserire</div>
+        <div class="comp-url">Fare ricerca e compilare</div>
+      </div>
+    </div>
+    <div class="comp-grid">
+      <div class="comp-stat">
+        <div class="comp-stat-label">Prodotto</div>
+        <div class="comp-stat-value" style="color:#555">—</div>
+      </div>
+      <div class="comp-stat">
+        <div class="comp-stat-label">Prezzo</div>
+        <div class="comp-stat-value" style="color:#555">—</div>
+      </div>
+      <div class="comp-stat">
+        <div class="comp-stat-label">Follower</div>
+        <div class="comp-stat-value" style="color:#555">—</div>
+      </div>
+      <div class="comp-stat">
+        <div class="comp-stat-label">Funnel</div>
+        <div class="comp-stat-value" style="color:#555">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp-card" style="border-color:#333">
+    <div class="comp-header">
+      <span style="font-size:1.4rem">🔍</span>
+      <div>
+        <div class="comp-name" style="color:#666">Competitor 2 — Da Inserire</div>
+        <div class="comp-url">Fare ricerca e compilare</div>
+      </div>
+    </div>
+    <div class="comp-grid">
+      <div class="comp-stat">
+        <div class="comp-stat-label">Prodotto</div>
+        <div class="comp-stat-value" style="color:#555">—</div>
+      </div>
+      <div class="comp-stat">
+        <div class="comp-stat-label">Prezzo</div>
+        <div class="comp-stat-value" style="color:#555">—</div>
+      </div>
+      <div class="comp-stat">
+        <div class="comp-stat-label">Follower</div>
+        <div class="comp-stat-value" style="color:#555">—</div>
+      </div>
+      <div class="comp-stat">
+        <div class="comp-stat-label">Funnel</div>
+        <div class="comp-stat-value" style="color:#555">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="comp-card" style="border-color:#333">
+    <div class="comp-header">
+      <span style="font-size:1.4rem">🔍</span>
+      <div>
+        <div class="comp-name" style="color:#666">Competitor 3 — Da Inserire</div>
+        <div class="comp-url">Fare ricerca e compilare</div>
+      </div>
+    </div>
+    <div class="comp-grid">
+      <div class="comp-stat">
+        <div class="comp-stat-label">Prodotto</div>
+        <div class="comp-stat-value" style="color:#555">—</div>
+      </div>
+      <div class="comp-stat">
+        <div class="comp-stat-label">Prezzo</div>
+        <div class="comp-stat-value" style="color:#555">—</div>
+      </div>
+      <div class="comp-stat">
+        <div class="comp-stat-label">Follower</div>
+        <div class="comp-stat-value" style="color:#555">—</div>
+      </div>
+      <div class="comp-stat">
+        <div class="comp-stat-label">Funnel</div>
+        <div class="comp-stat-value" style="color:#555">—</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="placeholder" style="margin-top:20px">
+    <div class="ph-icon">🔍</div>
+    <div class="ph-title">Ricerca Competitor — Da Fare</div>
+    <div class="ph-desc">Per ogni competitor forte: mappare tutto il funnel (ads → landing → VSL → call → offerta).<br>Questa sezione è la più importante per Giusi.</div>
+  </div>
+</div>
+
+</main>
+
+<!-- ══════════════════════════════════════════════════════
+     EDIT TOOLBAR (sempre visibile)
+     ══════════════════════════════════════════════════════ -->
+<div id="edit-toolbar" style="position:fixed;top:12px;right:16px;z-index:2000;display:flex;gap:8px;background:#14141c;border:1px solid #252532;border-radius:12px;padding:8px 10px;box-shadow:0 8px 24px rgba(0,0,0,.4);font-family:'Segoe UI',system-ui,sans-serif;">
+  <button id="btn-edit"   onclick="toggleEdit()"  style="background:#f0c040;color:#111;border:0;border-radius:8px;padding:7px 13px;font-size:.78rem;font-weight:700;cursor:pointer;letter-spacing:.04em;">✏️ Modifica</button>
+  <button id="btn-save"   onclick="saveAll()"    style="background:#40c070;color:#0a0a0f;border:0;border-radius:8px;padding:7px 13px;font-size:.78rem;font-weight:700;cursor:pointer;letter-spacing:.04em;display:none;">💾 Salva</button>
+  <button id="btn-reset"  onclick="clearSaved()" style="background:#222;color:#ccc;border:1px solid #333;border-radius:8px;padding:7px 13px;font-size:.78rem;font-weight:600;cursor:pointer;">♻️ Reset</button>
+  <button id="btn-pdf"    onclick="exportPdf()"  style="background:#222;color:#ccc;border:1px solid #333;border-radius:8px;padding:7px 13px;font-size:.78rem;font-weight:600;cursor:pointer;">📄 PDF</button>
+</div>
+
+<style>
+  body.editing [data-ek]:hover { outline: 1px dashed rgba(240,192,64,.35); outline-offset: 2px; cursor: text; }
+  body.editing [data-ek][contenteditable="true"]:focus { outline: 2px solid #f0c040; outline-offset: 2px; background: rgba(240,192,64,.04); }
+  #edit-toolbar button:hover { filter: brightness(1.08); transform: translateY(-1px); transition: .12s; }
+  @media print {
+    .sidebar, #edit-toolbar { display:none !important; }
+    .main { margin-left:0 !important; padding:0 !important; }
+    .page { display:block !important; page-break-after: always; }
   }
+</style>
+
+<!-- ══════════════════════════════════════════════════════
+     JAVASCRIPT
+     ══════════════════════════════════════════════════════ -->
+<script>
+const STORE_KEY = 'mappa_edits_v20';
+let editMode = false;
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById('page-' + id);
+  if (target) target.classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  const navItem = document.querySelector('.nav-item[data-page="' + id + '"]');
+  if (navItem) navItem.classList.add('active');
+  window.scrollTo(0, 0);
 }
 
-// ── DELETE BUTTONS ────────────────────────────────────
-function addDeleteButtons() {
-  document.querySelectorAll('.item, .pkg-features li').forEach(row => {
-    if (row.querySelector('.del-btn')) return;
-    const btn = document.createElement('button');
-    btn.className = 'del-btn';
-    btn.textContent = '×';
-    btn.title = 'Elimina';
-    btn.onclick = () => { row.remove(); flashSaved(); };
-    row.appendChild(btn);
+/* ——— Auto-assegna data-ek a tutti gli elementi di testo delle .page ——— */
+function assignEditKeys() {
+  const SELECTOR = 'h1,h2,h3,h4,h5,p,li,td,th,blockquote,figcaption,' +
+                   '.prod-name,.prod-type,.prod-desc,.prod-price,' +
+                   '.ph-title,.ph-desc,.ph-icon,' +
+                   '.dash-card-title,.dash-card-desc,.dash-card-status,.dash-card-icon,' +
+                   '.page-header p,.info-box,.tag,.badge,.dot,' +
+                   '.sidebar-brand,.sidebar-title,.sidebar-sub,.nav-section-label';
+  document.querySelectorAll('.page').forEach(page => {
+    const pid = page.id || 'x';
+    let i = 0;
+    page.querySelectorAll(SELECTOR).forEach(el => {
+      // Skip se contiene altri elementi editabili nidificati (prendiamo il padre più interno)
+      if (el.querySelector(SELECTOR)) return;
+      if (!el.dataset.ek) el.dataset.ek = pid + '::' + i + '::' + (el.tagName || '').toLowerCase();
+      i++;
+    });
+  });
+  // Sidebar nav items
+  document.querySelectorAll('.sidebar [data-page]').forEach((el, i) => {
+    if (!el.dataset.ek) el.dataset.ek = 'sb::' + i;
   });
 }
 
-// ── ADD BUTTONS ───────────────────────────────────────
-function addAddButtons() {
-  // Per ogni .card → aggiungi pulsante sotto gli .item
-  document.querySelectorAll('.card').forEach(card => {
-    if (card.querySelector('.btn-add-item')) return;
-    const btn = document.createElement('button');
-    btn.className = 'btn-add-item';
-    btn.textContent = '+ Aggiungi riga';
-    btn.onclick = () => {
-      const row = document.createElement('div');
-      row.className = 'item';
-      row.innerHTML = `<span class="icon" contenteditable="true" data-ek>✅</span><div contenteditable="true" data-ek><strong>Nuovo elemento</strong></div>`;
-      // delete btn
-      const del = document.createElement('button');
-      del.className = 'del-btn';
-      del.textContent = '×';
-      del.onclick = () => row.remove();
-      row.appendChild(del);
-      // Insert before the add button
-      card.insertBefore(row, btn);
-      row.querySelector('[contenteditable]').focus();
-    };
-    card.appendChild(btn);
-  });
-
-  // Per ogni .pkg-features → aggiungi pulsante
-  document.querySelectorAll('.pkg-features').forEach(list => {
-    if (list.querySelector('.btn-add-item')) return;
-    const btn = document.createElement('button');
-    btn.className = 'btn-add-item';
-    btn.textContent = '+ Aggiungi voce';
-    btn.onclick = () => {
-      const li = document.createElement('li');
-      li.innerHTML = `<span class="fi" contenteditable="true" data-ek>✅</span> <span contenteditable="true" data-ek>Nuova voce</span>`;
-      const del = document.createElement('button');
-      del.className = 'del-btn';
-      del.textContent = '×';
-      del.onclick = () => li.remove();
-      li.appendChild(del);
-      list.insertBefore(li, btn);
-      li.querySelector('[contenteditable]').focus();
-    };
-    list.appendChild(btn);
-  });
+/* ——— Carica modifiche salvate ——— */
+function loadSaved() {
+  try {
+    const raw = localStorage.getItem(STORE_KEY);
+    if (!raw) return;
+    const data = JSON.parse(raw);
+    Object.keys(data).forEach(k => {
+      const el = document.querySelector('[data-ek="' + CSS.escape(k) + '"]');
+      if (el) el.innerHTML = data[k];
+    });
+  } catch (e) { console.warn('loadSaved error', e); }
 }
 
-// ── SAVE TO LOCALSTORAGE ──────────────────────────────
+/* ——— Salva tutte le modifiche ——— */
 function saveAll() {
   const data = {};
   document.querySelectorAll('[data-ek]').forEach(el => {
-    if (el.closest('.toolbar')) return;
-    data[el.getAttribute('data-ek')] = el.innerHTML;
+    data[el.dataset.ek] = el.innerHTML;
   });
-  // Also save dynamic rows (items, pkg-features li) as full card HTML
-  document.querySelectorAll('.card, .pkg-features').forEach((el, i) => {
-    data[`__block_${i}`] = el.innerHTML;
-  });
-  localStorage.setItem(STORE_KEY, JSON.stringify(data));
-  flashSaved();
+  try {
+    localStorage.setItem(STORE_KEY, JSON.stringify(data));
+    flashToast('💾 Modifiche salvate in locale');
+  } catch (e) {
+    flashToast('⚠️ Errore salvataggio: ' + e.message);
+  }
 }
 
-// ── LOAD FROM LOCALSTORAGE ────────────────────────────
-function loadSaved() {
-  const raw = localStorage.getItem(STORE_KEY);
-  if (!raw) return;
-  const data = JSON.parse(raw);
-  // Restore block HTML first (includes dynamic rows)
-  document.querySelectorAll('.card, .pkg-features').forEach((el, i) => {
-    if (data[`__block_${i}`]) {
-      el.innerHTML = data[`__block_${i}`];
-      // Re-assign data-ek to new elements
-      el.querySelectorAll('[data-ek]').forEach((child, ci) => {
-        child.setAttribute('contenteditable', 'false');
-      });
-    }
-  });
-  // Then restore individual ek keys
+/* ——— Toggle modifica ——— */
+function toggleEdit() {
+  editMode = !editMode;
+  document.body.classList.toggle('editing', editMode);
   document.querySelectorAll('[data-ek]').forEach(el => {
-    if (el.closest('.toolbar')) return;
-    const key = el.getAttribute('data-ek');
-    if (data[key]) el.innerHTML = data[key];
+    el.contentEditable = editMode ? 'true' : 'false';
+    if (editMode) el.spellcheck = false;
   });
+  const btnEdit = document.getElementById('btn-edit');
+  const btnSave = document.getElementById('btn-save');
+  if (editMode) {
+    btnEdit.innerHTML = '🔒 Esci modifica';
+    btnEdit.style.background = '#e05050';
+    btnEdit.style.color = '#fff';
+    btnSave.style.display = 'inline-block';
+    flashToast('✏️ Modalità modifica attiva — clicca su qualsiasi testo per modificarlo');
+  } else {
+    btnEdit.innerHTML = '✏️ Modifica';
+    btnEdit.style.background = '#f0c040';
+    btnEdit.style.color = '#111';
+    btnSave.style.display = 'none';
+    saveAll(); // autosave uscendo
+  }
 }
 
-// ── RESET SAVED ───────────────────────────────────────
+/* ——— Reset ——— */
 function clearSaved() {
-  if (!confirm('Vuoi resettare tutte le modifiche e tornare al template originale?')) return;
+  if (!confirm('Vuoi davvero resettare tutte le modifiche salvate e tornare al contenuto originale?')) return;
   localStorage.removeItem(STORE_KEY);
   location.reload();
 }
 
-// ── EXPORT PDF ───────────────────────────────────────
+/* ——— Export PDF ——— */
 function exportPdf() {
-  // Disable edit mode first
-  if (editMode) toggleEdit();
-  // Hide toolbar
-  document.querySelector('.toolbar').style.display = 'none';
-  window.print();
+  // Mostra tutte le pagine per la stampa
+  const pages = document.querySelectorAll('.page');
+  pages.forEach(p => p.classList.add('active'));
+  flashToast('📄 Preparando PDF — usa "Salva come PDF" nel dialogo di stampa');
   setTimeout(() => {
-    document.querySelector('.toolbar').style.display = '';
-  }, 1000);
+    window.print();
+    // Ripristina stato post-stampa
+    setTimeout(() => {
+      pages.forEach(p => p.classList.remove('active'));
+      const currentHash = window.location.hash.replace('#', '') || 'dashboard';
+      showPage(currentHash);
+    }, 300);
+  }, 200);
 }
 
-// ── FLASH SAVED INDICATOR ─────────────────────────────
-function flashSaved() {
-  const ind = document.getElementById('saveIndicator');
-  ind.style.display = 'inline';
-  ind.style.animation = 'none';
-  void ind.offsetWidth; // reflow
-  ind.style.animation = 'fadeout 2s forwards';
-  setTimeout(() => ind.style.display = 'none', 2100);
-}
-
-// ── AUTO-SAVE on input ────────────────────────────────
-document.addEventListener('input', (e) => {
-  if (e.target.hasAttribute('data-ek') || e.target.closest('[data-ek]')) {
-    clearTimeout(window._autoSaveTimer);
-    window._autoSaveTimer = setTimeout(saveAll, 800);
+/* ——— Toast ——— */
+function flashToast(msg) {
+  let t = document.getElementById('edit-toast');
+  if (!t) {
+    t = document.createElement('div');
+    t.id = 'edit-toast';
+    t.style.cssText = 'position:fixed;bottom:20px;right:20px;z-index:3000;background:#14141c;border:1px solid #f0c040;color:#f0c040;padding:12px 18px;border-radius:10px;font-size:.82rem;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.5);font-family:\'Segoe UI\',system-ui,sans-serif;transition:opacity .3s,transform .3s;';
+    document.body.appendChild(t);
   }
+  t.textContent = msg;
+  t.style.opacity = '1';
+  t.style.transform = 'translateY(0)';
+  clearTimeout(t._timer);
+  t._timer = setTimeout(() => {
+    t.style.opacity = '0';
+    t.style.transform = 'translateY(8px)';
+  }, 2400);
+}
+
+/* ——— Bootstrap ——— */
+document.addEventListener('DOMContentLoaded', () => {
+  assignEditKeys();
+  loadSaved();
 });
 
-// ── START ─────────────────────────────────────────────
-init();
-</script>
-
-<style>
-@media print {
-  .toolbar { display: none !important; }
-  .btn-add-item { display: none !important; }
-  .del-btn { display: none !important; }
-  body { background: #fff !important; }
+// Immediate assignment se DOMContentLoaded è già avvenuto
+if (document.readyState !== 'loading') {
+  assignEditKeys();
+  loadSaved();
 }
-</style>
+
+// Handle URL hash
+if (window.location.hash) {
+  const page = window.location.hash.replace('#', '');
+  showPage(page);
+}
+
+// Scorciatoia: Cmd/Ctrl + E per toggle edit, Cmd/Ctrl + S per salvare
+document.addEventListener('keydown', (e) => {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'e') { e.preventDefault(); toggleEdit(); }
+  if ((e.metaKey || e.ctrlKey) && e.key === 's' && editMode) { e.preventDefault(); saveAll(); }
+});
+</script>
 
 </body>
 </html>
