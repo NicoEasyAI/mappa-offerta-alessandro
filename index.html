@@ -349,7 +349,40 @@ body {
   border-radius: 14px;
   padding: 20px;
   margin-bottom: 14px;
+  overflow: hidden;
 }
+.testi-thumb {
+  display: block;
+  width: calc(100% + 40px);
+  margin: -20px -20px 16px -20px;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  background: #0a0a10;
+  transition: opacity .2s ease;
+}
+.testi-thumb:hover { opacity: .85; }
+.testi-thumb-wrap {
+  position: relative;
+  width: calc(100% + 40px);
+  margin: -20px -20px 16px -20px;
+  display: block;
+}
+.testi-thumb-wrap img { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; background: #0a0a10; }
+.testi-thumb-wrap::after {
+  content: "▶";
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: 56px; height: 56px;
+  background: rgba(0,0,0,.65);
+  color: #fff;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+  pointer-events: none;
+  transition: background .2s ease, transform .2s ease;
+}
+.testi-thumb-wrap:hover::after { background: rgba(64,192,112,.85); transform: translate(-50%, -50%) scale(1.05); }
 .testi-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
 .testi-avatar {
   width: 40px; height: 40px;
@@ -1840,6 +1873,7 @@ body {
 
   <div class="grid-2">
     <div class="testi-card">
+      <a class="testi-thumb-wrap" href="https://vimeo.com/reviews/c069788d-9253-47bc-aac8-033fd1b7764e/videos/1178403499" target="_blank" rel="noopener"><img src="thumbs/01-michael-del-duca.jpg" alt="Testimonianza Michael Del Duca" loading="lazy"></a>
       <div class="testi-header">
         <div class="testi-avatar">💰</div>
         <div><div class="testi-name">Michael Del Duca</div><div class="testi-detail">08:47 · testimonianza di aggiornamento</div></div>
@@ -1852,6 +1886,7 @@ body {
     </div>
 
     <div class="testi-card">
+      <a class="testi-thumb-wrap" href="https://vimeo.com/reviews/c069788d-9253-47bc-aac8-033fd1b7764e/videos/1178403233" target="_blank" rel="noopener"><img src="thumbs/02-mauro-del-nero.jpg" alt="Testimonianza Mauro Del Nero" loading="lazy"></a>
       <div class="testi-header">
         <div class="testi-avatar">💰</div>
         <div><div class="testi-name">Mauro Del Nero</div><div class="testi-detail">10:51</div></div>
@@ -1864,6 +1899,7 @@ body {
     </div>
 
     <div class="testi-card">
+      <a class="testi-thumb-wrap" href="https://vimeo.com/reviews/c069788d-9253-47bc-aac8-033fd1b7764e/videos/1178403261" target="_blank" rel="noopener"><img src="thumbs/03-mauro-appignanesi.jpg" alt="Testimonianza Mauro Appignanesi" loading="lazy"></a>
       <div class="testi-header">
         <div class="testi-avatar" style="background:rgba(74,144,217,.15)">🙋</div>
         <div><div class="testi-name">Mauro Appignanesi</div><div class="testi-detail">03:35 · qualitativo</div></div>
@@ -1876,6 +1912,7 @@ body {
     </div>
 
     <div class="testi-card">
+      <a class="testi-thumb-wrap" href="https://vimeo.com/reviews/c069788d-9253-47bc-aac8-033fd1b7764e/videos/1178397238" target="_blank" rel="noopener"><img src="thumbs/04-tiziano-grasso.jpg" alt="Testimonianza Tiziano Grasso" loading="lazy"></a>
       <div class="testi-header">
         <div class="testi-avatar">💰</div>
         <div><div class="testi-name">Tiziano Grasso</div><div class="testi-detail">09:56</div></div>
@@ -1888,6 +1925,7 @@ body {
     </div>
 
     <div class="testi-card">
+      <a class="testi-thumb-wrap" href="https://vimeo.com/reviews/c069788d-9253-47bc-aac8-033fd1b7764e/videos/1178397286" target="_blank" rel="noopener"><img src="thumbs/05-stefano-lunardi.jpg" alt="Testimonianza Stefano Lunardi" loading="lazy"></a>
       <div class="testi-header">
         <div class="testi-avatar">📆</div>
         <div><div class="testi-name">Stefano Lunardi</div><div class="testi-detail">06:42 · testimonianza di aggiornamento</div></div>
@@ -1900,6 +1938,7 @@ body {
     </div>
 
     <div class="testi-card">
+      <a class="testi-thumb-wrap" href="https://vimeo.com/reviews/c069788d-9253-47bc-aac8-033fd1b7764e/videos/1178397057" target="_blank" rel="noopener"><img src="thumbs/06-simone-laperuta.jpg" alt="Testimonianza Simone Laperuta" loading="lazy"></a>
       <div class="testi-header">
         <div class="testi-avatar">💰</div>
         <div><div class="testi-name">Simone Laperuta</div><div class="testi-detail">06:09</div></div>
@@ -1912,6 +1951,7 @@ body {
     </div>
 
     <div class="testi-card">
+      <a class="testi-thumb-wrap" href="https://vimeo.com/reviews/c069788d-9253-47bc-aac8-033fd1b7764e/videos/1178397114" target="_blank" rel="noopener"><img src="thumbs/07-roberto-genna.jpg" alt="Testimonianza Roberto Genna" loading="lazy"></a>
       <div class="testi-header">
         <div class="testi-avatar">💰</div>
         <div><div class="testi-name">Roberto Genna</div><div class="testi-detail">20:29</div></div>
@@ -1924,6 +1964,7 @@ body {
     </div>
 
     <div class="testi-card">
+      <a class="testi-thumb-wrap" href="https://vimeo.com/reviews/c069788d-9253-47bc-aac8-033fd1b7764e/videos/1178397213" target="_blank" rel="noopener"><img src="thumbs/08-michela-mordini.jpg" alt="Testimonianza Michela Mordini" loading="lazy"></a>
       <div class="testi-header">
         <div class="testi-avatar">💰</div>
         <div><div class="testi-name">Michela Mordini</div><div class="testi-detail">05:55</div></div>
@@ -1936,6 +1977,7 @@ body {
     </div>
 
     <div class="testi-card">
+      <a class="testi-thumb-wrap" href="https://vimeo.com/reviews/c069788d-9253-47bc-aac8-033fd1b7764e/videos/1178397537" target="_blank" rel="noopener"><img src="thumbs/09-leonardo-marotta.jpg" alt="Testimonianza Leonardo Marotta" loading="lazy"></a>
       <div class="testi-header">
         <div class="testi-avatar">⭐</div>
         <div><div class="testi-name">Leonardo Marotta</div><div class="testi-detail">06:38 · 2 account</div></div>
@@ -1948,6 +1990,7 @@ body {
     </div>
 
     <div class="testi-card">
+      <a class="testi-thumb-wrap" href="https://vimeo.com/reviews/c069788d-9253-47bc-aac8-033fd1b7764e/videos/1178397086" target="_blank" rel="noopener"><img src="thumbs/10-gino-cassai.jpg" alt="Testimonianza Gino Cassai" loading="lazy"></a>
       <div class="testi-header">
         <div class="testi-avatar">💰</div>
         <div><div class="testi-name">Gino Cassai</div><div class="testi-detail">14:22</div></div>
@@ -1960,6 +2003,7 @@ body {
     </div>
 
     <div class="testi-card">
+      <a class="testi-thumb-wrap" href="https://vimeo.com/reviews/c069788d-9253-47bc-aac8-033fd1b7764e/videos/1178397013" target="_blank" rel="noopener"><img src="thumbs/11-francesco-borrelli.jpg" alt="Testimonianza Francesco Borrelli" loading="lazy"></a>
       <div class="testi-header">
         <div class="testi-avatar" style="background:rgba(155,89,182,.15)">🚀</div>
         <div><div class="testi-name">Francesco Borrelli</div><div class="testi-detail">08:57 · cambio vita</div></div>
@@ -1972,6 +2016,7 @@ body {
     </div>
 
     <div class="testi-card">
+      <a class="testi-thumb-wrap" href="https://vimeo.com/reviews/c069788d-9253-47bc-aac8-033fd1b7764e/videos/1178397169" target="_blank" rel="noopener"><img src="thumbs/12-bruno-marigliano.jpg" alt="Testimonianza Bruno Marigliano" loading="lazy"></a>
       <div class="testi-header">
         <div class="testi-avatar">💰</div>
         <div><div class="testi-name">Bruno Marigliano</div><div class="testi-detail">04:51</div></div>
@@ -1984,6 +2029,7 @@ body {
     </div>
 
     <div class="testi-card">
+      <a class="testi-thumb-wrap" href="https://vimeo.com/reviews/c069788d-9253-47bc-aac8-033fd1b7764e/videos/1178397311" target="_blank" rel="noopener"><img src="thumbs/13-mirko-di-camillo.jpg" alt="Testimonianza Mirko Di Camillo" loading="lazy"></a>
       <div class="testi-header">
         <div class="testi-avatar" style="background:rgba(74,144,217,.15)">🔁</div>
         <div><div class="testi-name">Mirko Di Camillo</div><div class="testi-detail">07:50 · profilazione</div></div>
@@ -1996,6 +2042,7 @@ body {
     </div>
 
     <div class="testi-card">
+      <a class="testi-thumb-wrap" href="https://vimeo.com/reviews/c069788d-9253-47bc-aac8-033fd1b7764e/videos/1168833465" target="_blank" rel="noopener"><img src="thumbs/14-marco-di-lauro.jpg" alt="Testimonianza Marco Di Lauro" loading="lazy"></a>
       <div class="testi-header">
         <div class="testi-avatar" style="background:rgba(240,192,64,.15)">🏆</div>
         <div><div class="testi-name">Marco Di Lauro</div><div class="testi-detail">04:29 · scaling</div></div>
@@ -2008,6 +2055,7 @@ body {
     </div>
 
     <div class="testi-card">
+      <a class="testi-thumb-wrap" href="https://vimeo.com/reviews/c069788d-9253-47bc-aac8-033fd1b7764e/videos/1168833394" target="_blank" rel="noopener"><img src="thumbs/15-marco-iodice.jpg" alt="Testimonianza Marco Iodice" loading="lazy"></a>
       <div class="testi-header">
         <div class="testi-avatar" style="background:rgba(240,192,64,.15)">🏆</div>
         <div><div class="testi-name">Marco Iodice</div><div class="testi-detail">06:42 · profilazione + casinò</div></div>
@@ -2020,6 +2068,7 @@ body {
     </div>
 
     <div class="testi-card">
+      <a class="testi-thumb-wrap" href="https://vimeo.com/reviews/c069788d-9253-47bc-aac8-033fd1b7764e/videos/1168833340" target="_blank" rel="noopener"><img src="thumbs/16-enrico-spampanato.jpg" alt="Testimonianza Enrico Spampanato" loading="lazy"></a>
       <div class="testi-header">
         <div class="testi-avatar" style="background:rgba(74,144,217,.15)">🏆</div>
         <div><div class="testi-name">Enrico Spampanato</div><div class="testi-detail">04:37 · coach/scaling</div></div>
