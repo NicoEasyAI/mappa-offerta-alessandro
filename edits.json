@@ -608,8 +608,6 @@
   "page-testimonianze::1::p": "Tutte le testimonianze raccolte con link alle fonti originali",
   "page-testimonianze::2::div": "\n    <strong>Aggiorna questa sezione</strong> ogni volta che raccogli una nuova testimonianza. Inserisci sempre il link alla fonte originale (screenshot, video YouTube, Google Drive, sales page).\n  ",
   "page-testimonianze::3::div": "📸",
-  "page-testimonianze::4::div": "Aggiungi altre testimonianze",
-  "page-testimonianze::5::div": "Per ogni testimonianza inserisci: nome, risultato, dettaglio account, e soprattutto il <strong style=\"color:#888\">link alla fonte</strong> (screenshot, video YT, Google Drive, sales page).",
   "page-autorita::0::h1": "Autorità",
   "page-autorita::1::p": "Elementi di autorità esistenti + proposte per costruirne di nuovi",
   "page-autorita::2::span": "",
